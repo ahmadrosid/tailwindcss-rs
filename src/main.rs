@@ -47,7 +47,7 @@ fn watch(source: String, output: String) -> notify::Result<()> {
 /// Lightweight tailwindcss!
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
-struct Args {
+struct Application {
     /// Source directories for html files!
     #[clap(short, long)]
     source: String,
@@ -58,7 +58,7 @@ struct Args {
 }
 
 fn main() {
-    let args = Args::parse();
+    let args = Application::parse();
 
     if let Err(e) = watch(args.source, args.output) {
         println!("error: {:?}", e)
