@@ -6,23 +6,25 @@ use html5ever::parse_document;
 use html5ever::tendril::TendrilSink;
 use html5ever::tree_builder::TreeBuilderOpts;
 use rcdom::{Handle, NodeData, RcDom};
+use std::collections::HashSet;
 use std::error::Error;
 use std::path::Path;
 
 struct Css {
-    source: String,
+    source: HashSet<String>,
 }
 
 impl Css {
     pub fn new() -> Self {
         Self {
-            source: String::new(),
+            source: HashSet::new(),
         }
     }
 
     pub fn push(&mut self, class: &str) {
-        self.source.push_str(class);
-        self.source.push_str(" ");
+        class.to_owned().split(" ").into_iter().for_each(|val| {
+            self.source.insert(val.to_owned());
+        })
     }
 }
 
@@ -50,7 +52,7 @@ fn collect_css(node: &Handle, css: &mut Css) {
     }
 }
 
-fn walk(handle: &Handle) -> String {
+fn walk(handle: &Handle) -> HashSet<String> {
     let mut css = Css::new();
 
     collect_css(handle, &mut css);
@@ -58,7 +60,7 @@ fn walk(handle: &Handle) -> String {
     css.source
 }
 
-pub(crate) fn process(path: &Path) -> Result<String, Box<dyn Error>> {
+pub(crate) fn process(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
     let opts = ParseOpts {
         tree_builder: TreeBuilderOpts {
             drop_doctype: true,

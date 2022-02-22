@@ -1,15 +1,15 @@
 #[macro_use]
 extern crate html5ever;
-mod parser;
 mod generator;
+mod parser;
 
 extern crate notify;
 
+use clap::Parser;
 use notify::{DebouncedEvent, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
-use clap::Parser;
 
 fn watch(source: String, output: String) -> notify::Result<()> {
     let (tx, rx) = channel();
