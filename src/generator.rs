@@ -18,31 +18,29 @@ pub fn generate(source: HashSet<String>, output: String) {
                 std::process::exit(1);
             }
 
-            source.iter().for_each(|line| {
-                println!("{}", line);
-                match &line[..] {
-                    "flex" => {
-                        if !data.contains(".flex") {
-                            write!(file, "{}\n", ".flex { display: flex; }").unwrap();
-                        }
+            source.iter().for_each(|line| match &line[..] {
+                "flex" => {
+                    if !data.contains(".flex") {
+                        writeln!(file, "{}", ".flex { display: flex; }").unwrap();
                     }
-                    "p-4" => {
-                        if !data.contains(".p-4") {
-                            write!(file, "{}\n", ".p-4 { padding: 16px; }").unwrap();
-                        }
-                    }
-                    "my-2" => {
-                        if !data.contains(".my-2") {
-                            write!(
-                                file,
-                                "{}\n",
-                                ".my-2 { margin-top: 8px; margin-bottom: 8px; }"
-                            )
-                            .unwrap();
-                        }
-                    }
-                    _ => {}
                 }
+                "p-4" => {
+                    if !data.contains(".p-4") {
+                        writeln!(file, "{}", ".p-4 { padding: 16px; }").unwrap();
+                    }
+                }
+                "my-2" => {
+                    if !data.contains(".my-2") {
+                        writeln!(file, "{}", ".my-2 { margin-top: 8px; margin-bottom: 8px; }")
+                            .unwrap();
+                    }
+                }
+                "border" => {
+                    if !data.contains(".border") {
+                        writeln!(file, "{}", ".border { border-width: 1px }").unwrap()
+                    }
+                }
+                _ => {}
             })
         }
         _ => {
