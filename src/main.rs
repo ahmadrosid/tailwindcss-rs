@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate html5ever;
+mod config;
 mod generator;
 mod parser;
 
@@ -12,6 +13,9 @@ use std::sync::mpsc::channel;
 use std::time::Duration;
 
 fn watch(source: String, output: String) -> notify::Result<()> {
+    let config_source = include_str!("default-config.json");
+    let config_json = config::parse_config(config_source.to_string()).unwrap();
+
     let (tx, rx) = channel();
 
     let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_secs(2))?;
@@ -19,7 +23,7 @@ fn watch(source: String, output: String) -> notify::Result<()> {
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
 
     let css = parser::process(&Path::new(&source)).unwrap();
-    generator::generate(css, output.to_owned());
+    generator::generate(css, output.to_owned(), &config_json);
 
     loop {
         let event = match rx.recv() {
@@ -36,7 +40,7 @@ fn watch(source: String, output: String) -> notify::Result<()> {
             | DebouncedEvent::Create(path)
             | DebouncedEvent::Chmod(path) => {
                 let css = parser::process(&path);
-                generator::generate(css.unwrap(), output.to_owned());
+                generator::generate(css.unwrap(), output.to_owned(), &config_json);
             }
             _ => (),
         }

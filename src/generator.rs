@@ -1,8 +1,9 @@
+use crate::config::Config;
 use std::collections::HashSet;
 use std::io::{Read, Write};
 use std::path::Path;
 
-pub fn generate(source: HashSet<String>, output: String) {
+pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
     let css_file = std::fs::OpenOptions::new()
         .write(true)
         .create(true)
@@ -18,30 +19,53 @@ pub fn generate(source: HashSet<String>, output: String) {
                 std::process::exit(1);
             }
 
-            source.iter().for_each(|line| match &line[..] {
-                "flex" => {
-                    if !data.contains(".flex") {
-                        writeln!(file, "{}", ".flex { display: flex; }").unwrap();
+            for line in source.iter() {
+                match &line[..] {
+                    "flex" => {
+                        if !data.contains(".flex") {
+                            writeln!(file, "{}", ".flex {\n\tdisplay: flex;\n}\n").unwrap();
+                            continue;
+                        }
+                    }
+                    "p-4" => {
+                        if !data.contains(".p-4") {
+                            writeln!(file, "{}", ".p-4 {\n\tpadding: 16px;\n}\n").unwrap();
+                            continue;
+                        }
+                    }
+                    "my-2" => {
+                        if !data.contains(".my-2") {
+                            writeln!(file, "{}", ".my-2 {\n\tmargin-top: 8px;\n\tmargin-bottom: 8px;\n}\n")
+                                .unwrap();
+                            continue;
+                        }
+                    }
+                    "border" => {
+                        if !data.contains(".border") {
+                            writeln!(file, "{}", ".border {\n\tborder-width: 1px;\n}\n").unwrap();
+                            continue;
+                        }
+                    }
+                    _ => {}
+                }
+
+                if line.starts_with("text-") {
+                    let size = line.split("-").last().unwrap();
+                    if let Some(font_size) = config_json.get_font_size(size) {
+                        if !data.contains(&format!(".text-{}", size.to_owned())) {
+                            writeln!(
+                                file,
+                                "{}",
+                                format!(
+                                    ".text-{} {{\n\tfont-size: '{}';\n\tline-height: '{}';\n}}\n",
+                                    size, font_size.value, font_size.line_height
+                                )
+                            )
+                            .unwrap()
+                        }
                     }
                 }
-                "p-4" => {
-                    if !data.contains(".p-4") {
-                        writeln!(file, "{}", ".p-4 { padding: 16px; }").unwrap();
-                    }
-                }
-                "my-2" => {
-                    if !data.contains(".my-2") {
-                        writeln!(file, "{}", ".my-2 { margin-top: 8px; margin-bottom: 8px; }")
-                            .unwrap();
-                    }
-                }
-                "border" => {
-                    if !data.contains(".border") {
-                        writeln!(file, "{}", ".border { border-width: 1px }").unwrap()
-                    }
-                }
-                _ => {}
-            })
+            }
         }
         _ => {
             println!("Unable to read file: {}", output);
