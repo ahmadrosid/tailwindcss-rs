@@ -1,16 +1,17 @@
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FontSize {
     pub value: String,
     pub line_height: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Config {
     font_size: HashMap<String, FontSize>,
     font_weight: HashMap<String, String>,
+    spacing: HashMap<String, String>,
 }
 
 impl Config {
@@ -18,6 +19,7 @@ impl Config {
         Self {
             font_size: HashMap::new(),
             font_weight: HashMap::new(),
+            spacing: HashMap::new(),
         }
     }
 
@@ -27,6 +29,10 @@ impl Config {
 
     pub fn get_font_weight(&self, key: &str) -> Option<&String> {
         self.font_weight.get(key)
+    }
+
+    pub fn get_spacing(&self, key: &str) -> Option<&String> {
+        self.spacing.get(key)
     }
 }
 
@@ -72,14 +78,27 @@ fn extract_font_weight(value: &Map<String, Value>) -> HashMap<String, String> {
     result
 }
 
+fn extract_spacing(value: &Map<String, Value>) -> HashMap<String, String> {
+    let font_weight: Map<String, Value> =
+        value.get("spacing").unwrap().as_object().unwrap().clone();
+    let mut result = HashMap::new();
+    for (key, val) in font_weight.iter() {
+        result.insert(key.to_string(), val.as_str().unwrap().to_string());
+    }
+
+    result
+}
+
 pub fn parse_config(source: String) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(&source)?;
     let obj: Map<String, Value> = value.as_object().unwrap().clone();
     let font_size = extract_font_size(&obj);
     let font_weight = extract_font_weight(&obj);
+    let spacing = extract_spacing(&obj);
     let mut config = Config::new();
     config.font_size = font_size;
     config.font_weight = font_weight;
+    config.spacing = spacing;
 
     Ok(config)
 }
