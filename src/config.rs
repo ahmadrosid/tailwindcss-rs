@@ -10,25 +10,27 @@ pub struct FontSize {
 #[derive(Debug)]
 pub struct Config {
     font_size: HashMap<String, FontSize>,
+    font_weight: HashMap<String, String>,
 }
 
 impl Config {
     pub fn new() -> Self {
         Self {
             font_size: HashMap::new(),
+            font_weight: HashMap::new(),
         }
-    }
-
-    fn add_font_size(&mut self, key: String, font: FontSize) {
-        self.font_size.insert(key, font);
     }
 
     pub fn get_font_size(&self, key: &str) -> Option<&FontSize> {
         self.font_size.get(key)
     }
+
+    pub fn get_font_weight(&self, key: &str) -> Option<&String> {
+        self.font_weight.get(key)
+    }
 }
 
-fn extract_font_size(value: Map<String, Value>) -> HashMap<String, FontSize> {
+fn extract_font_size(value: &Map<String, Value>) -> HashMap<String, FontSize> {
     let font_size: Map<String, Value> =
         value.get("font_size").unwrap().as_object().unwrap().clone();
     let mut result = HashMap::new();
@@ -55,12 +57,29 @@ fn extract_font_size(value: Map<String, Value>) -> HashMap<String, FontSize> {
     result
 }
 
+fn extract_font_weight(value: &Map<String, Value>) -> HashMap<String, String> {
+    let font_weight: Map<String, Value> = value
+        .get("font_weight")
+        .unwrap()
+        .as_object()
+        .unwrap()
+        .clone();
+    let mut result = HashMap::new();
+    for (key, val) in font_weight.iter() {
+        result.insert(key.to_string(), val.as_str().unwrap().to_string());
+    }
+
+    result
+}
+
 pub fn parse_config(source: String) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(&source)?;
     let obj: Map<String, Value> = value.as_object().unwrap().clone();
-    let font_size = extract_font_size(obj);
+    let font_size = extract_font_size(&obj);
+    let font_weight = extract_font_weight(&obj);
     let mut config = Config::new();
     config.font_size = font_size;
+    config.font_weight = font_weight;
 
     Ok(config)
 }
