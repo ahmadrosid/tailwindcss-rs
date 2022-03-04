@@ -179,4 +179,27 @@ impl CssGenerator {
             _ => {}
         }
     }
+
+    pub fn generate_line_height(&mut self, prefix: &str, line: &str) {
+        let mut space = line.split("-").last().unwrap().to_string();
+        let mut space_size = String::new();
+        if let Some(size) = self.config_json.get_line_height(&space.to_string()) {
+            space_size.push_str(&size);
+        } else {
+            return;
+        }
+
+        space = space.replace(".", "\\.");
+        match prefix {
+            "leading" => {
+                let css = format!(
+                    ".leading-{} {{\n\tline-height: {};\n}}",
+                    space.to_string(),
+                    space_size
+                );
+                writeln!(self.file, "{}", css).unwrap()
+            }
+            _ => {}
+        }
+    }
 }

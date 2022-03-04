@@ -12,6 +12,7 @@ pub struct Config {
     font_size: HashMap<String, FontSize>,
     font_weight: HashMap<String, String>,
     spacing: HashMap<String, String>,
+    line_height: HashMap<String, String>,
 }
 
 impl Config {
@@ -20,6 +21,7 @@ impl Config {
             font_size: HashMap::new(),
             font_weight: HashMap::new(),
             spacing: HashMap::new(),
+            line_height: HashMap::new(),
         }
     }
 
@@ -33,6 +35,10 @@ impl Config {
 
     pub fn get_spacing(&self, key: &str) -> Option<&String> {
         self.spacing.get(key)
+    }
+
+    pub fn get_line_height(&self, key: &str) -> Option<&String> {
+        self.line_height.get(key)
     }
 }
 
@@ -63,24 +69,9 @@ fn extract_font_size(value: &Map<String, Value>) -> HashMap<String, FontSize> {
     result
 }
 
-fn extract_font_weight(value: &Map<String, Value>) -> HashMap<String, String> {
-    let font_weight: Map<String, Value> = value
-        .get("font_weight")
-        .unwrap()
-        .as_object()
-        .unwrap()
-        .clone();
-    let mut result = HashMap::new();
-    for (key, val) in font_weight.iter() {
-        result.insert(key.to_string(), val.as_str().unwrap().to_string());
-    }
-
-    result
-}
-
-fn extract_spacing(value: &Map<String, Value>) -> HashMap<String, String> {
+fn extract_hash_map(value: &Map<String, Value>, key: &str) -> HashMap<String, String> {
     let font_weight: Map<String, Value> =
-        value.get("spacing").unwrap().as_object().unwrap().clone();
+        value.get(key).unwrap().as_object().unwrap().clone();
     let mut result = HashMap::new();
     for (key, val) in font_weight.iter() {
         result.insert(key.to_string(), val.as_str().unwrap().to_string());
@@ -93,12 +84,11 @@ pub fn parse_config(source: String) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(&source)?;
     let obj: Map<String, Value> = value.as_object().unwrap().clone();
     let font_size = extract_font_size(&obj);
-    let font_weight = extract_font_weight(&obj);
-    let spacing = extract_spacing(&obj);
     let mut config = Config::new();
     config.font_size = font_size;
-    config.font_weight = font_weight;
-    config.spacing = spacing;
+    config.font_weight = extract_hash_map(&obj, "font_weight");
+    config.spacing = extract_hash_map(&obj, "spacing");
+    config.line_height = extract_hash_map(&obj, "lineHeight");
 
     Ok(config)
 }
