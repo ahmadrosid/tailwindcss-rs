@@ -65,6 +65,7 @@ fn main() {
     let args = Application::parse();
 
     if let Err(e) = watch(args.source, args.output) {
-        println!("error: {:?}", e)
+        println!("error: {:?}", e);
+        std::process::exit(1);
     }
 }
