@@ -5,6 +5,26 @@ use std::collections::HashSet;
 use std::io::Read;
 use std::path::Path;
 
+fn handle_spacing(line: &str, prefix: &str) -> Option<String> {
+    return if line.starts_with(&format!("{}-", prefix)) {
+        Some(prefix.to_string())
+    } else if line.starts_with(&format!("{}y-", prefix)) {
+        Some(format!("{}y", prefix))
+    } else if line.starts_with(&format!("{}x-", prefix)) {
+        Some(format!("{}x", prefix))
+    } else if line.starts_with(&format!("{}l-", prefix)) {
+        Some(format!("{}l", prefix))
+    } else if line.starts_with(&format!("{}r-", prefix)) {
+        Some(format!("{}r", prefix))
+    } else if line.starts_with(&format!("{}t-", prefix)) {
+        Some(format!("{}t", prefix))
+    } else if line.starts_with(&format!("{}b-", prefix)) {
+        Some(format!("{}b", prefix))
+    } else {
+        None
+    };
+}
+
 pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
     let css_file = std::fs::OpenOptions::new()
         .write(true)
@@ -23,24 +43,29 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
             }
 
             for line in source.iter() {
+                if data.contains(&format!(".{}", &line.replace(".", "\\."))) {
+                    continue;
+                }
+
                 if line.starts_with("text-") {
-                    generator.generate_font_size(&line, &mut data);
+                    generator.generate_font_size(&line);
                 } else if line.starts_with("font-") {
-                    generator.generate_font_weight(&line, &mut data);
-                } else if line.starts_with("p-") {
-                    generator.generate_padding("p", &line, &mut data);
-                } else if line.starts_with("py-") {
-                    generator.generate_padding("py", &line, &mut data);
-                } else if line.starts_with("px-") {
-                    generator.generate_padding("px", &line, &mut data);
-                } else if line.starts_with("pl-") {
-                    generator.generate_padding("pl", &line, &mut data);
-                } else if line.starts_with("pr-") {
-                    generator.generate_padding("pr", &line, &mut data);
-                } else if line.starts_with("pt-") {
-                    generator.generate_padding("pt", &line, &mut data);
-                } else if line.starts_with("pb-") {
-                    generator.generate_padding("pb", &line, &mut data);
+                    generator.generate_font_weight(&line);
+                }
+
+                if let Some(prefix) = handle_spacing(line, "p") {
+                    generator.generate_padding(&prefix, line);
+                    continue;
+                }
+
+                if let Some(prefix) = handle_spacing(line, "m") {
+                    generator.generate_margin(&prefix, line);
+                    continue;
+                }
+
+                if let Some(prefix) = handle_spacing(line, "w") {
+                    generator.generate_width(&prefix, line);
+                    continue;
                 }
             }
         }
@@ -48,4 +73,5 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
             println!("Unable to read file: {}", output);
         }
     }
+    println!("Update css {}", output);
 }
