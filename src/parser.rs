@@ -23,7 +23,7 @@ impl Css {
 
     pub fn push(&mut self, class: &str) {
         class.to_owned().split(" ").into_iter().for_each(|val| {
-            self.source.insert(val.to_owned());
+            self.source.insert(val.to_string());
         })
     }
 }
@@ -35,10 +35,11 @@ fn collect_css(node: &Handle, css: &mut Css) {
             ref attrs,
             ..
         } => {
-            assert!(name.ns == ns!(html));
+            if name.ns != ns!(html) {
+                return;
+            }
             for attr in attrs.borrow().iter() {
-                assert!(attr.name.ns == ns!());
-                if &*attr.name.local == "class" {
+                if attr.name.ns == ns!() && &*attr.name.local == "class" {
                     css.push(&*attr.value);
                 }
             }
@@ -52,7 +53,7 @@ fn collect_css(node: &Handle, css: &mut Css) {
     }
 }
 
-fn walk(handle: &Handle) -> HashSet<String> {
+fn parse(handle: &Handle) -> HashSet<String> {
     let mut css = Css::new();
 
     collect_css(handle, &mut css);
@@ -60,7 +61,7 @@ fn walk(handle: &Handle) -> HashSet<String> {
     css.source
 }
 
-pub(crate) fn process(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
+pub fn process(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
     let opts = ParseOpts {
         tree_builder: TreeBuilderOpts {
             drop_doctype: true,
@@ -71,7 +72,7 @@ pub(crate) fn process(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
     let dom = parse_document(RcDom::default(), opts)
         .from_utf8()
         .from_file(path)?;
-    let result = walk(&dom.document);
+    let result = parse(&dom.document);
 
     Ok(result)
 }

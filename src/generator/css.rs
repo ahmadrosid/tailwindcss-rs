@@ -230,12 +230,5 @@ impl CssGenerator {
                 }
             }
         }
-
-        // let mut space_size = String::new();
-        // if let Some(size) = self.config_json.get_line_height(&space.to_string()) {
-        //     space_size.push_str(&size);
-        // } else {
-        //     return;
-        // }
     }
 }

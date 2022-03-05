@@ -76,7 +76,7 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
                     continue;
                 }
 
-                if let Some(prefix) = handle_spacing(line, "leading") {
+                if let Some(prefix) = handle_prefix(line, "leading") {
                     generator.generate_line_height(&prefix, line);
                     continue;
                 }
