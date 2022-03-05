@@ -97,22 +97,22 @@ impl CssGenerator {
                 writeln!(self.file, "{}", css).unwrap()
             }
             "py" => {
-                let css = format!(
+                let css = &format!(
                     ".py-{} {{\n\tpadding-top: {};\n\tpadding-bottom: {};\n}}",
                     space.to_string(),
                     space_size,
                     space_size
                 );
-                writeln!(self.file, "{}", css).unwrap()
+                self.append_css(css);
             }
             "px" => {
-                let css = format!(
+                let css = &format!(
                     ".px-{} {{\n\tpadding-left: {};\n\tpadding-right: {};\n}}",
                     space.to_string(),
                     space_size,
                     space_size
                 );
-                writeln!(self.file, "{}", css).unwrap()
+                self.append_css(css);
             }
             _ => {}
         };
@@ -130,33 +130,33 @@ impl CssGenerator {
         space = space.replace(".", "\\.");
         match prefix {
             "m" => {
-                let css = format!(".m-{} {{\n\tmargin: {};\n}}", space.to_string(), space_size);
-                writeln!(self.file, "{}", css).unwrap()
+                let css = &format!(".m-{} {{\n\tmargin: {};\n}}", space.to_string(), space_size);
+                self.append_css(css)
             }
             "mt" => {
-                let css = format!(
+                let css = &format!(
                     ".mt-{} {{\n\tmargin-top: {};\n}}",
                     space.to_string(),
                     space_size
                 );
-                writeln!(self.file, "{}", css).unwrap()
+                self.append_css(css)
             }
             "mb" => {
-                let css = format!(
+                let css = &format!(
                     ".mb-{} {{\n\tmargin-bottom: {};\n}}",
                     space.to_string(),
                     space_size
                 );
-                writeln!(self.file, "{}", css).unwrap()
+                self.append_css(css);
             }
             "mx" => {
-                let css = format!(
+                let css = &format!(
                     ".mx-{} {{\n\tmargin-left: {};\n\tmargin-right: {};\n}}",
                     space.to_string(),
                     space_size,
                     space_size
                 );
-                writeln!(self.file, "{}", css).unwrap()
+                self.append_css(css);
             }
             _ => {}
         }
@@ -178,8 +178,8 @@ impl CssGenerator {
         space = space.replace(".", "\\.").replace("/", "\\/");
         match prefix {
             "w" => {
-                let css = format!(".w-{} {{\n\twidth: {};\n}}", space.to_string(), space_size);
-                writeln!(self.file, "{}", css).unwrap()
+                let css = &format!(".w-{} {{\n\twidth: {};\n}}", space.to_string(), space_size);
+                self.append_css(css);
             }
             _ => {}
         }
@@ -197,12 +197,12 @@ impl CssGenerator {
         space = space.replace(".", "\\.");
         match prefix {
             "leading" => {
-                let css = format!(
+                let css = &format!(
                     ".leading-{} {{\n\tline-height: {};\n}}",
                     space.to_string(),
                     space_size
                 );
-                writeln!(self.file, "{}", css).unwrap()
+                self.append_css(&css);
             }
             _ => {}
         }
