@@ -167,11 +167,15 @@ impl CssGenerator {
         let mut space_size = String::new();
         if let Some(size) = self.config_json.get_spacing(&space.to_string()) {
             space_size.push_str(&size);
-        } else {
+        } else if let Some(size) = self.config_json.get_width(&space) {
+            space_size.push_str(size)
+        }
+
+        if space_size.is_empty() {
             return;
         }
 
-        space = space.replace(".", "\\.");
+        space = space.replace(".", "\\.").replace("/", "\\/");
         match prefix {
             "w" => {
                 let css = format!(".w-{} {{\n\twidth: {};\n}}", space.to_string(), space_size);

@@ -14,6 +14,7 @@ pub struct Config {
     spacing: HashMap<String, String>,
     line_height: HashMap<String, String>,
     aspect_ratio: HashMap<String, String>,
+    width: HashMap<String, String>,
     color: Map<String, Value>,
 }
 
@@ -25,6 +26,7 @@ impl Config {
             spacing: HashMap::new(),
             line_height: HashMap::new(),
             aspect_ratio: HashMap::new(),
+            width: HashMap::new(),
             color: Map::new(),
         }
     }
@@ -49,9 +51,14 @@ impl Config {
         self.aspect_ratio.get(key)
     }
 
+    pub fn get_width(&self, key: &str) -> Option<&String> {
+        self.width.get(key)
+    }
+
     pub fn get_color_map(&self, key: &str) -> Option<&Map<String, Value>> {
         self.color.get(key).unwrap().as_object()
     }
+
 
     pub fn get_color_str(&self, key: &str) -> Option<&str> {
         self.color.get(key).unwrap().as_str()
@@ -106,6 +113,7 @@ pub fn parse_config(source: String) -> serde_json::Result<Config> {
     config.line_height = extract_hash_map(&obj, "lineHeight");
     config.color = obj.get("color").unwrap().as_object().unwrap().clone();
     config.aspect_ratio = extract_hash_map(&obj, "aspectRatio");
+    config.width = extract_hash_map(&obj, "width");
 
     Ok(config)
 }
