@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate html5ever;
 mod config;
 mod generator;

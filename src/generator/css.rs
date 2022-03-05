@@ -223,12 +223,29 @@ impl CssGenerator {
             if let Some(color) = self.config_json.get_color_map(name) {
                 match color.get(level) {
                     Some(val) => {
-                        let css = &format!(".bg-{}-{} {{\n\tbackground-color: {};\n}}", name, level, val.as_str().unwrap());
+                        let css = &format!(
+                            ".bg-{}-{} {{\n\tbackground-color: {};\n}}",
+                            name,
+                            level,
+                            val.as_str().unwrap()
+                        );
                         self.append_css(css)
-                    },
+                    }
                     _ => {}
                 }
             }
+        }
+    }
+
+    pub fn generate_aspect_ratio(&mut self, line: &str) {
+        let key = line.split("-").last().unwrap();
+        let value = self.config_json.get_aspect_ratio(key);
+        match value {
+            Some(val) => {
+                let css = &format!(".aspect-{} {{\n\taspect-ratio: {};\n}}", key, val);
+                self.append_css(css);
+            }
+            _ => {}
         }
     }
 }

@@ -30,16 +30,9 @@ impl Css {
 
 fn collect_css(node: &Handle, css: &mut Css) {
     match node.data {
-        NodeData::Element {
-            ref name,
-            ref attrs,
-            ..
-        } => {
-            if name.ns != ns!(html) {
-                return;
-            }
+        NodeData::Element { ref attrs, .. } => {
             for attr in attrs.borrow().iter() {
-                if attr.name.ns == ns!() && &*attr.name.local == "class" {
+                if &*attr.name.local == "class" {
                     css.push(&*attr.value);
                 }
             }

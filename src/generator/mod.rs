@@ -85,6 +85,11 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
                     generator.generate_background_color(line);
                     continue;
                 }
+
+                if handle_prefix(line, "aspect").is_some() {
+                    generator.generate_aspect_ratio(line);
+                    continue;
+                }
             }
         }
         _ => {
