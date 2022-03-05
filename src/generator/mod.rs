@@ -51,7 +51,8 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
             }
 
             for line in source.iter() {
-                if data.contains(&format!(".{}", &line.replace(".", "\\."))) {
+                let class = line.replace(".", "\\.").replace("/", "\\/");
+                if data.contains(&format!(".{}", &class)) {
                     continue;
                 }
 
@@ -88,6 +89,11 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
 
                 if handle_prefix(line, "aspect").is_some() {
                     generator.generate_aspect_ratio(line);
+                    continue;
+                }
+
+                if handle_prefix(line, "columns").is_some() {
+                    generator.generate_columns(line);
                     continue;
                 }
             }

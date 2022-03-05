@@ -15,6 +15,7 @@ pub struct Config {
     line_height: HashMap<String, String>,
     aspect_ratio: HashMap<String, String>,
     width: HashMap<String, String>,
+    columns: HashMap<String, String>,
     color: Map<String, Value>,
 }
 
@@ -27,6 +28,7 @@ impl Config {
             line_height: HashMap::new(),
             aspect_ratio: HashMap::new(),
             width: HashMap::new(),
+            columns: HashMap::new(),
             color: Map::new(),
         }
     }
@@ -51,6 +53,10 @@ impl Config {
         self.aspect_ratio.get(key)
     }
 
+    pub fn get_columns(&self, key: &str) -> Option<&String> {
+        self.columns.get(key)
+    }
+
     pub fn get_width(&self, key: &str) -> Option<&String> {
         self.width.get(key)
     }
@@ -58,7 +64,6 @@ impl Config {
     pub fn get_color_map(&self, key: &str) -> Option<&Map<String, Value>> {
         self.color.get(key).unwrap().as_object()
     }
-
 
     pub fn get_color_str(&self, key: &str) -> Option<&str> {
         self.color.get(key).unwrap().as_str()
@@ -93,12 +98,19 @@ fn extract_font_size(value: &Map<String, Value>) -> HashMap<String, FontSize> {
 }
 
 fn extract_hash_map(value: &Map<String, Value>, key: &str) -> HashMap<String, String> {
+    if value.get(key).is_none() {
+        return HashMap::new();
+    }
+
+    if value.get(key).unwrap().as_object().is_none() {
+        return HashMap::new();
+    }
+
     let font_weight: Map<String, Value> = value.get(key).unwrap().as_object().unwrap().clone();
     let mut result = HashMap::new();
     for (key, val) in font_weight.iter() {
         result.insert(key.to_string(), val.as_str().unwrap().to_string());
     }
-
     result
 }
 
@@ -114,6 +126,7 @@ pub fn parse_config(source: String) -> serde_json::Result<Config> {
     config.color = obj.get("color").unwrap().as_object().unwrap().clone();
     config.aspect_ratio = extract_hash_map(&obj, "aspectRatio");
     config.width = extract_hash_map(&obj, "width");
+    config.columns = extract_hash_map(&obj, "columns");
 
     Ok(config)
 }

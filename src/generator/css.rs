@@ -252,4 +252,16 @@ impl CssGenerator {
             _ => {}
         }
     }
+
+    pub fn generate_columns(&mut self, line: &str) {
+        let key = line.split("-").last().unwrap();
+        let value = self.config_json.get_columns(key);
+        match value {
+            Some(val) => {
+                let css = &format!(".columns-{} {{\n\tcolumns: {};\n}}", key, val);
+                self.append_css(css);
+            }
+            _ => {}
+        }
+    }
 }
