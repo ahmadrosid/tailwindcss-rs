@@ -25,6 +25,14 @@ fn handle_spacing(line: &str, prefix: &str) -> Option<String> {
     };
 }
 
+fn handle_prefix(line: &str, prefix: &str) -> Option<String> {
+    if line.starts_with(&format!("{}-", prefix)) {
+        Some(prefix.to_string())
+    } else {
+        None
+    }
+}
+
 pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
     let css_file = std::fs::OpenOptions::new()
         .write(true)
@@ -70,6 +78,11 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
 
                 if let Some(prefix) = handle_spacing(line, "leading") {
                     generator.generate_line_height(&prefix, line);
+                    continue;
+                }
+
+                if handle_prefix(line, "bg").is_some() {
+                    generator.generate_background_color(line);
                     continue;
                 }
             }

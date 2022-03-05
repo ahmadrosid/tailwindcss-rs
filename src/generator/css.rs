@@ -15,6 +15,15 @@ impl CssGenerator {
         }
     }
 
+    fn append_css(&mut self, css: &str) {
+        match writeln!(self.file, "{}", css) {
+            Err(e) => {
+                println!("Failed to write css to file: {}", e)
+            }
+            _ => {}
+        }
+    }
+
     pub fn generate_font_size(&mut self, line: &str) {
         if line.starts_with("text-") {
             let size = line.split("-").last().unwrap();
@@ -121,11 +130,7 @@ impl CssGenerator {
         space = space.replace(".", "\\.");
         match prefix {
             "m" => {
-                let css = format!(
-                    ".m-{} {{\n\tmargin: {};\n}}",
-                    space.to_string(),
-                    space_size
-                );
+                let css = format!(".m-{} {{\n\tmargin: {};\n}}", space.to_string(), space_size);
                 writeln!(self.file, "{}", css).unwrap()
             }
             "mt" => {
@@ -169,11 +174,7 @@ impl CssGenerator {
         space = space.replace(".", "\\.");
         match prefix {
             "w" => {
-                let css = format!(
-                    ".w-{} {{\n\twidth: {};\n}}",
-                    space.to_string(),
-                    space_size
-                );
+                let css = format!(".w-{} {{\n\twidth: {};\n}}", space.to_string(), space_size);
                 writeln!(self.file, "{}", css).unwrap()
             }
             _ => {}
@@ -201,5 +202,40 @@ impl CssGenerator {
             }
             _ => {}
         }
+    }
+
+    pub fn generate_background_color(&mut self, line: &str) {
+        let classes: Vec<&str> = line.split("-").collect();
+        if classes.len() == 2 {
+            let name = classes.last().unwrap();
+            match self.config_json.get_color_str(name) {
+                Some(val) => {
+                    let css = &format!(".bg-{} {{\n\tbackground-color: {};\n}}", name, val);
+                    self.append_css(css)
+                }
+                _ => {}
+            }
+        }
+
+        if classes.len() == 3 {
+            let name = classes[1];
+            let level = classes[2];
+            if let Some(color) = self.config_json.get_color_map(name) {
+                match color.get(level) {
+                    Some(val) => {
+                        let css = &format!(".bg-{}-{} {{\n\tbackground-color: {};\n}}", name, level, val.as_str().unwrap());
+                        self.append_css(css)
+                    },
+                    _ => {}
+                }
+            }
+        }
+
+        // let mut space_size = String::new();
+        // if let Some(size) = self.config_json.get_line_height(&space.to_string()) {
+        //     space_size.push_str(&size);
+        // } else {
+        //     return;
+        // }
     }
 }

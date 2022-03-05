@@ -13,6 +13,7 @@ pub struct Config {
     font_weight: HashMap<String, String>,
     spacing: HashMap<String, String>,
     line_height: HashMap<String, String>,
+    color: Map<String, Value>,
 }
 
 impl Config {
@@ -22,6 +23,7 @@ impl Config {
             font_weight: HashMap::new(),
             spacing: HashMap::new(),
             line_height: HashMap::new(),
+            color: Map::new(),
         }
     }
 
@@ -39,6 +41,14 @@ impl Config {
 
     pub fn get_line_height(&self, key: &str) -> Option<&String> {
         self.line_height.get(key)
+    }
+
+    pub fn get_color_map(&self, key: &str) -> Option<&Map<String, Value>> {
+        self.color.get(key).unwrap().as_object()
+    }
+
+    pub fn get_color_str(&self, key: &str) -> Option<&str> {
+        self.color.get(key).unwrap().as_str()
     }
 }
 
@@ -70,8 +80,7 @@ fn extract_font_size(value: &Map<String, Value>) -> HashMap<String, FontSize> {
 }
 
 fn extract_hash_map(value: &Map<String, Value>, key: &str) -> HashMap<String, String> {
-    let font_weight: Map<String, Value> =
-        value.get(key).unwrap().as_object().unwrap().clone();
+    let font_weight: Map<String, Value> = value.get(key).unwrap().as_object().unwrap().clone();
     let mut result = HashMap::new();
     for (key, val) in font_weight.iter() {
         result.insert(key.to_string(), val.as_str().unwrap().to_string());
@@ -89,6 +98,7 @@ pub fn parse_config(source: String) -> serde_json::Result<Config> {
     config.font_weight = extract_hash_map(&obj, "font_weight");
     config.spacing = extract_hash_map(&obj, "spacing");
     config.line_height = extract_hash_map(&obj, "lineHeight");
+    config.color = obj.get("color").unwrap().as_object().unwrap().clone();
 
     Ok(config)
 }
