@@ -96,6 +96,11 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
                     generator.generate_columns(line);
                     continue;
                 }
+
+                if handle_prefix(line, "break").is_some() {
+                    generator.generate_break_point(line);
+                    continue;
+                }
             }
         }
         _ => {

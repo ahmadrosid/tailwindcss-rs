@@ -264,4 +264,16 @@ impl CssGenerator {
             _ => {}
         }
     }
+
+    pub fn generate_break_point(&mut self, line: &str) {
+        let value = self.config_json.get_break_point(&format!(".{}", line));
+        match value {
+            Some(val) => {
+                let (key, val) = val.as_object().unwrap().iter().next().unwrap();
+                let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
+                self.append_css(css);
+            }
+            _ => {}
+        }
+    }
 }

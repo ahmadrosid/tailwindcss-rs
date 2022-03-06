@@ -16,6 +16,7 @@ pub struct Config {
     aspect_ratio: HashMap<String, String>,
     width: HashMap<String, String>,
     columns: HashMap<String, String>,
+    break_point: Map<String, Value>,
     color: Map<String, Value>,
 }
 
@@ -29,6 +30,7 @@ impl Config {
             aspect_ratio: HashMap::new(),
             width: HashMap::new(),
             columns: HashMap::new(),
+            break_point: Map::new(),
             color: Map::new(),
         }
     }
@@ -55,6 +57,10 @@ impl Config {
 
     pub fn get_columns(&self, key: &str) -> Option<&String> {
         self.columns.get(key)
+    }
+
+    pub fn get_break_point(&self, key: &str) -> Option<&Value> {
+        self.break_point.get(key)
     }
 
     pub fn get_width(&self, key: &str) -> Option<&String> {
@@ -98,11 +104,7 @@ fn extract_font_size(value: &Map<String, Value>) -> HashMap<String, FontSize> {
 }
 
 fn extract_hash_map(value: &Map<String, Value>, key: &str) -> HashMap<String, String> {
-    if value.get(key).is_none() {
-        return HashMap::new();
-    }
-
-    if value.get(key).unwrap().as_object().is_none() {
+    if value.get(key).is_none() || value.get(key).unwrap().as_object().is_none() {
         return HashMap::new();
     }
 
@@ -112,6 +114,13 @@ fn extract_hash_map(value: &Map<String, Value>, key: &str) -> HashMap<String, St
         result.insert(key.to_string(), val.as_str().unwrap().to_string());
     }
     result
+}
+
+fn extract_object(obj: &Map<String, Value>, key: &str) -> Map<String, Value> {
+    if obj.get(key).is_none() || obj.get(key).unwrap().as_object().is_none() {
+        return Map::new();
+    }
+    obj.get(key).unwrap().as_object().unwrap().clone()
 }
 
 pub fn parse_config(source: String) -> serde_json::Result<Config> {
@@ -127,6 +136,13 @@ pub fn parse_config(source: String) -> serde_json::Result<Config> {
     config.aspect_ratio = extract_hash_map(&obj, "aspectRatio");
     config.width = extract_hash_map(&obj, "width");
     config.columns = extract_hash_map(&obj, "columns");
+    config.break_point = extract_object(&obj, "break-before");
+    config
+        .break_point
+        .extend(extract_object(&obj, "break-after"));
+    config
+        .break_point
+        .extend(extract_object(&obj, "break-inside"));
 
     Ok(config)
 }
