@@ -58,9 +58,9 @@ pub fn process(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
     let opts = ParseOpts {
         tree_builder: TreeBuilderOpts {
             drop_doctype: true,
-            ..Default::default()
+            ..TreeBuilderOpts::default()
         },
-        ..Default::default()
+        ..ParseOpts::default()
     };
     let dom = parse_document(RcDom::default(), opts)
         .from_utf8()

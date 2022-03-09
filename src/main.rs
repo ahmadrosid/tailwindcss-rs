@@ -11,7 +11,7 @@ use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-fn watch(source: String, output: String) -> notify::Result<()> {
+fn watch(source: &str, output: &str) -> notify::Result<()> {
     let config_source = include_str!("default-config.json");
     let config_json = config::parse_config(config_source.to_string()).unwrap();
 
@@ -21,8 +21,8 @@ fn watch(source: String, output: String) -> notify::Result<()> {
 
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
 
-    let css = parser::process(&Path::new(&source)).unwrap();
-    generator::generate(css, output.clone(), &config_json);
+    let css = parser::process(Path::new(&source)).unwrap();
+    generator::generate(&css, output, &config_json);
 
     loop {
         let event = match rx.recv() {
@@ -38,8 +38,8 @@ fn watch(source: String, output: String) -> notify::Result<()> {
             | DebouncedEvent::Write(path)
             | DebouncedEvent::Create(path)
             | DebouncedEvent::Chmod(path) => {
-                let css = parser::process(&path);
-                generator::generate(css.unwrap(), output.clone(), &config_json);
+                let css = parser::process(&path).unwrap();
+                generator::generate(&css, output, &config_json);
             }
             _ => (),
         }
@@ -63,7 +63,7 @@ struct Application {
 fn main() {
     let args = Application::parse();
 
-    if let Err(e) = watch(args.source, args.output) {
+    if let Err(e) = watch(&args.source, &args.output) {
         println!("error: {:?}", e);
         std::process::exit(1);
     }

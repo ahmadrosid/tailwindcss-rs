@@ -33,7 +33,7 @@ fn handle_prefix(line: &str, prefix: &str) -> Option<String> {
     }
 }
 
-pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
+pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
     let css_file = std::fs::OpenOptions::new()
         .write(true)
         .create(true)
@@ -44,7 +44,7 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
 
     match css_file {
         Ok(mut file) => {
-            let mut generator = css::CssGenerator::new(&file, config_json.clone());
+            let mut generator = css::Css::new(&file, config_json.clone());
             if file.read_to_string(&mut data).is_err() {
                 println!("Unable to read file: {}", output);
                 std::process::exit(1);
@@ -57,9 +57,9 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
                 }
 
                 if line.starts_with("text-") {
-                    generator.generate_font_size(&line);
+                    generator.generate_font_size(line);
                 } else if line.starts_with("font-") {
-                    generator.generate_font_weight(&line);
+                    generator.generate_font_weight(line);
                 }
 
                 if let Some(prefix) = handle_spacing(line, "p") {
