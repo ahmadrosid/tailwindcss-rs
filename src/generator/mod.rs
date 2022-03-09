@@ -107,5 +107,5 @@ pub fn generate(source: HashSet<String>, output: String, config_json: &Config) {
             println!("Unable to read file: {}", output);
         }
     }
-    println!("Update css {}", output);
+    println!("Css updated: {}!", output);
 }

@@ -7,7 +7,7 @@ pub struct FontSize {
     pub line_height: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Config {
     font_size: HashMap<String, FontSize>,
     font_weight: HashMap<String, String>,
@@ -21,20 +21,6 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new() -> Self {
-        Self {
-            font_size: HashMap::new(),
-            font_weight: HashMap::new(),
-            spacing: HashMap::new(),
-            line_height: HashMap::new(),
-            aspect_ratio: HashMap::new(),
-            width: HashMap::new(),
-            columns: HashMap::new(),
-            break_point: Map::new(),
-            color: Map::new(),
-        }
-    }
-
     pub fn get_font_size(&self, key: &str) -> Option<&FontSize> {
         self.font_size.get(key)
     }
@@ -127,7 +113,7 @@ pub fn parse_config(source: String) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(&source)?;
     let obj: Map<String, Value> = value.as_object().unwrap().clone();
     let font_size = extract_font_size(&obj);
-    let mut config = Config::new();
+    let mut config = Config::default();
     config.font_size = font_size;
     config.font_weight = extract_hash_map(&obj, "font_weight");
     config.spacing = extract_hash_map(&obj, "spacing");
