@@ -223,14 +223,14 @@ impl CssGenerator {
 
         if classes.len() == 3 {
             let name = classes[1];
-            let level = classes[2];
+            let variant = classes[2];
             if let Some(color) = self.config_json.get_color_map(name) {
-                match color.get(level) {
+                match color.get(variant) {
                     Some(val) => {
                         let css = &format!(
                             ".bg-{}-{} {{\n\tbackground-color: {};\n}}",
                             name,
-                            level,
+                            variant,
                             val.as_str().unwrap()
                         );
                         self.append_css(css)
