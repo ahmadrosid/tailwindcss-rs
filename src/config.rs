@@ -16,6 +16,7 @@ pub struct Config {
     aspect_ratio: HashMap<String, String>,
     width: HashMap<String, String>,
     columns: HashMap<String, String>,
+    margin: HashMap<String, String>,
     break_point: Map<String, Value>,
     color: Map<String, Value>,
 }
@@ -57,6 +58,14 @@ impl Config {
         self.color.get(key).unwrap().as_object()
     }
 
+    pub fn get_margin(&self, key: &str) -> Option<&String> {
+        let margin = self.spacing.get(key);
+        if margin.is_none() {
+            return self.margin.get(key)
+        }
+        margin
+    }
+
     pub fn get_color_str(&self, key: &str) -> Option<&str> {
         self.color.get(key).unwrap().as_str()
     }
@@ -79,6 +88,7 @@ impl Config {
             aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
             width: extract_hash_map(&obj, "width"),
             columns: extract_hash_map(&obj, "columns"),
+            margin: extract_hash_map(&obj, "margin"),
         };
 
         Ok(config)

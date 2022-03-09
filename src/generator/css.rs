@@ -92,9 +92,9 @@ impl Css {
 
     pub fn generate_margin(&mut self, prefix: &str, line: &str) {
         let mut space = line.split('-').last().unwrap().to_string();
-        let mut space_size = String::new();
-        if let Some(size) = self.config.get_spacing(&space) {
-            space_size.push_str(size);
+        let mut variant = String::new();
+        if let Some(size) = self.config.get_margin(&space) {
+            variant.push_str(size);
         } else {
             return;
         }
@@ -102,21 +102,21 @@ impl Css {
         space = space.replace(".", "\\.");
         match prefix {
             "m" => {
-                let css = &format!(".m-{} {{\n\tmargin: {};\n}}", space, space_size);
+                let css = &format!(".m-{} {{\n\tmargin: {};\n}}", space, variant);
                 self.append_css(css);
             }
             "mt" => {
-                let css = &format!(".mt-{} {{\n\tmargin-top: {};\n}}", space, space_size);
+                let css = &format!(".mt-{} {{\n\tmargin-top: {};\n}}", space, variant);
                 self.append_css(css);
             }
             "mb" => {
-                let css = &format!(".mb-{} {{\n\tmargin-bottom: {};\n}}", space, space_size);
+                let css = &format!(".mb-{} {{\n\tmargin-bottom: {};\n}}", space, variant);
                 self.append_css(css);
             }
             "mx" => {
                 let css = &format!(
                     ".mx-{} {{\n\tmargin-left: {};\n\tmargin-right: {};\n}}",
-                    space, space_size, space_size
+                    space, variant, variant
                 );
                 self.append_css(css);
             }

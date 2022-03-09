@@ -1,4 +1,7 @@
 {
+  "margin": {
+    "auto": "auto"
+  },
   "spacing": {
     "0": "0px",
     "1": "0.25rem",
