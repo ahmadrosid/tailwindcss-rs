@@ -60,6 +60,29 @@ impl Config {
     pub fn get_color_str(&self, key: &str) -> Option<&str> {
         self.color.get(key).unwrap().as_str()
     }
+
+    pub fn parse_config(source: &str) -> serde_json::Result<Config> {
+        let value: Value = serde_json::from_str(source)?;
+        let obj: Map<String, Value> = value.as_object().unwrap().clone();
+        let font_size = extract_font_size(&obj);
+        let mut break_point = extract_object(&obj, "break-before");
+        break_point.extend(extract_object(&obj, "break-after"));
+        break_point.extend(extract_object(&obj, "break-inside"));
+
+        let config = Config {
+            font_size,
+            break_point,
+            font_weight: extract_hash_map(&obj, "font_weight"),
+            spacing: extract_hash_map(&obj, "spacing"),
+            line_height: extract_hash_map(&obj, "lineHeight"),
+            color: obj.get("color").unwrap().as_object().unwrap().clone(),
+            aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
+            width: extract_hash_map(&obj, "width"),
+            columns: extract_hash_map(&obj, "columns"),
+        };
+
+        Ok(config)
+    }
 }
 
 fn extract_font_size(value: &Map<String, Value>) -> HashMap<String, FontSize> {
@@ -75,13 +98,13 @@ fn extract_font_size(value: &Map<String, Value>) -> HashMap<String, FontSize> {
         if line_height.is_number() {
             let font = FontSize {
                 value: val.as_array().unwrap()[0].as_str().unwrap().to_string(),
-                line_height: format!("{}", line_height.as_i64().unwrap()),
+                line_height: line_height.as_i64().unwrap().to_string(),
             };
             result.insert(item.to_string(), font);
         } else if line_height.is_string() {
             let font = FontSize {
                 value: val.as_array().unwrap()[0].as_str().unwrap().to_string(),
-                line_height: format!("{}", line_height.as_str().unwrap()),
+                line_height: line_height.as_str().unwrap().to_string(),
             };
             result.insert(item.to_string(), font);
         }
@@ -107,28 +130,4 @@ fn extract_object(obj: &Map<String, Value>, key: &str) -> Map<String, Value> {
         return Map::new();
     }
     obj.get(key).unwrap().as_object().unwrap().clone()
-}
-
-pub fn parse_config(source: String) -> serde_json::Result<Config> {
-    let value: Value = serde_json::from_str(&source)?;
-    let obj: Map<String, Value> = value.as_object().unwrap().clone();
-    let font_size = extract_font_size(&obj);
-    let mut config = Config::default();
-    config.font_size = font_size;
-    config.font_weight = extract_hash_map(&obj, "font_weight");
-    config.spacing = extract_hash_map(&obj, "spacing");
-    config.line_height = extract_hash_map(&obj, "lineHeight");
-    config.color = obj.get("color").unwrap().as_object().unwrap().clone();
-    config.aspect_ratio = extract_hash_map(&obj, "aspectRatio");
-    config.width = extract_hash_map(&obj, "width");
-    config.columns = extract_hash_map(&obj, "columns");
-    config.break_point = extract_object(&obj, "break-before");
-    config
-        .break_point
-        .extend(extract_object(&obj, "break-after"));
-    config
-        .break_point
-        .extend(extract_object(&obj, "break-inside"));
-
-    Ok(config)
 }

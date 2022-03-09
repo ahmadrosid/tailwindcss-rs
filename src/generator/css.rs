@@ -1,5 +1,4 @@
 use crate::config::Config;
-use std::env::var;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
@@ -16,40 +15,37 @@ impl Css {
     }
 
     fn append_css(&mut self, css: &str) {
-        match self.writer.write_all(format!("{}\n", css).as_bytes()) {
-            Err(e) => {
-                println!("Failed to write css to file: {}", e)
-            }
-            _ => {}
+        if let Err(e) = self.writer.write_all(format!("{}\n", css).as_bytes()) {
+            println!("Failed to write css to file: {}", e);
         }
     }
 
     pub fn generate_font_size(&mut self, line: &str) {
         if line.starts_with("text-") {
-            let size = line.split("-").last().unwrap();
+            let size = line.split('-').last().unwrap();
             if let Some(font_size) = self.config.get_font_size(size) {
-                let css = format!(
+                let css = &format!(
                     ".text-{} {{\n\tfont-size: {};\n\tline-height: {};\n}}",
                     size, font_size.value, font_size.line_height
                 );
-                self.append_css(&css);
+                self.append_css(css);
             }
         }
     }
 
     pub fn generate_font_weight(&mut self, line: &str) {
-        let size = line.split("-").last().unwrap();
+        let size = line.split('-').last().unwrap();
         if let Some(font_size) = self.config.get_font_weight(size) {
-            let css = format!(".font-{} {{\n\tfont-size: {};\n}}", size, font_size);
-            self.append_css(&css)
+            let css = &format!(".font-{} {{\n\tfont-size: {};\n}}", size, font_size);
+            self.append_css(css);
         }
     }
 
     pub fn generate_padding(&mut self, prefix: &str, line: &str) {
-        let mut space = line.split("-").last().unwrap().to_string();
+        let mut space = line.split('-').last().unwrap().to_string();
         let mut space_size = String::new();
-        if let Some(size) = self.config.get_spacing(&space.to_string()) {
-            space_size.push_str(&size);
+        if let Some(size) = self.config.get_spacing(&space) {
+            space_size.push_str(size);
         } else {
             return;
         }
@@ -57,28 +53,16 @@ impl Css {
         space = space.replace(".", "\\.");
         match prefix {
             "p" => {
-                let css = format!(
-                    ".p-{} {{\n\tpadding: {};\n}}",
-                    space.to_string(),
-                    space_size
-                );
-                self.append_css(&css)
+                let css = &format!(".p-{} {{\n\tpadding: {};\n}}", space, space_size);
+                self.append_css(css);
             }
             "pt" => {
-                let css = format!(
-                    ".pt-{} {{\n\tpadding-top: {};\n}}",
-                    space.to_string(),
-                    space_size
-                );
-                self.append_css(&css)
+                let css = &format!(".pt-{} {{\n\tpadding-top: {};\n}}", space, space_size);
+                self.append_css(css);
             }
             "pb" => {
-                let css = format!(
-                    ".pb-{} {{\n\tpadding-bottom: {};\n}}",
-                    space.to_string(),
-                    space_size
-                );
-                self.append_css(&css)
+                let css = &format!(".pb-{} {{\n\tpadding-bottom: {};\n}}", space, space_size);
+                self.append_css(css);
             }
             "pl" => {
                 let css = &format!(".pl-{} {{\n\tpadding-left: {};\n}}", space, space_size);
