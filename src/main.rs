@@ -14,7 +14,7 @@ use std::time::Duration;
 
 fn watch(source: &str, output: &str) -> notify::Result<()> {
     let config_source = include_str!("default-config.json");
-    let config_json = Config::parse_config(config_source).unwrap();
+    let config = Config::parse(config_source).unwrap();
 
     let (tx, rx) = channel();
 
@@ -23,7 +23,7 @@ fn watch(source: &str, output: &str) -> notify::Result<()> {
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
 
     let css = parser::process(Path::new(&source)).unwrap();
-    generator::generate(&css, output, &config_json);
+    generator::generate(&css, output, &config);
 
     loop {
         let event = match rx.recv() {
@@ -40,7 +40,7 @@ fn watch(source: &str, output: &str) -> notify::Result<()> {
             | DebouncedEvent::Create(path)
             | DebouncedEvent::Chmod(path) => {
                 let css = parser::process(&path).unwrap();
-                generator::generate(&css, output, &config_json);
+                generator::generate(&css, output, &config);
             }
             _ => (),
         }

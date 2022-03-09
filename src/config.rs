@@ -61,7 +61,7 @@ impl Config {
         self.color.get(key).unwrap().as_str()
     }
 
-    pub fn parse_config(source: &str) -> serde_json::Result<Config> {
+    pub fn parse(source: &str) -> serde_json::Result<Config> {
         let value: Value = serde_json::from_str(source)?;
         let obj: Map<String, Value> = value.as_object().unwrap().clone();
         let font_size = extract_font_size(&obj);
