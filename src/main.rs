@@ -22,7 +22,7 @@ fn watch(source: String, output: String) -> notify::Result<()> {
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
 
     let css = parser::process(&Path::new(&source)).unwrap();
-    generator::generate(css, output.to_owned(), &config_json);
+    generator::generate(css, output.clone(), &config_json);
 
     loop {
         let event = match rx.recv() {
@@ -39,7 +39,7 @@ fn watch(source: String, output: String) -> notify::Result<()> {
             | DebouncedEvent::Create(path)
             | DebouncedEvent::Chmod(path) => {
                 let css = parser::process(&path);
-                generator::generate(css.unwrap(), output.to_owned(), &config_json);
+                generator::generate(css.unwrap(), output.clone(), &config_json);
             }
             _ => (),
         }
