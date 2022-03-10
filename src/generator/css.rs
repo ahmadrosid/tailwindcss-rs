@@ -24,7 +24,7 @@ impl Css {
         Self { config, writer }
     }
 
-    fn get_property(name: String) -> Option<&'static str> {
+    fn get_property(name: &str) -> Option<&'static str> {
         match &name[0..1] {
             "p" => Some("padding"),
             "m" => Some("margin"),
@@ -32,7 +32,7 @@ impl Css {
         }
     }
 
-    fn get_area(name: String) -> Area {
+    fn get_area(name: &str) -> Area {
         if name.len() == 1 {
             return Area::None;
         }
@@ -49,8 +49,8 @@ impl Css {
     }
 
     fn generate_variant(name: &str, variant: &str, value: &str) -> Option<String> {
-        let property = Self::get_property(name.to_string())?;
-        return match Self::get_area(name.to_string()) {
+        let property = Self::get_property(name)?;
+        return match Self::get_area(name) {
             Area::None => {
                 Some(
                     format!(".{} {{\n\t{}: {};\n}}", name, property, value)
