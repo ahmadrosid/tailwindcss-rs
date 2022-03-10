@@ -38,7 +38,7 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
         .write(true)
         .create(true)
         .read(true)
-        .append(true)
+        .truncate(true)
         .open(Path::new(&output));
     let mut data = String::new();
 
@@ -51,10 +51,10 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
             }
 
             for line in source.iter() {
-                let class = line.replace(".", "\\.").replace("/", "\\/");
-                if data.contains(&format!(".{}", &class)) {
-                    continue;
-                }
+                // let class = line.replace(".", "\\.").replace("/", "\\/");
+                // if data.contains(&format!(".{}", &class)) {
+                //     continue;
+                // }
 
                 if line.starts_with("text-") {
                     generator.generate_font_size(line);

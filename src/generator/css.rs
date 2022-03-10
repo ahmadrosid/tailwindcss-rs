@@ -2,6 +2,16 @@ use crate::config::Config;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
+enum Area {
+    Left,
+    Right,
+    Top,
+    Bottom,
+    Vertical,
+    Horizontal,
+    None
+}
+
 pub struct Css {
     config: Config,
     writer: BufWriter<Box<File>>,
@@ -12,6 +22,73 @@ impl Css {
         let file = file.try_clone().unwrap();
         let writer = BufWriter::new(Box::new(file));
         Self { config, writer }
+    }
+
+    fn get_property(name: String) -> Option<&'static str> {
+        match &name[0..1] {
+            "p" => Some("padding"),
+            "m" => Some("margin"),
+            _ => None
+        }
+    }
+
+    fn get_area(name: String) -> Area {
+        if name.len() == 1 {
+            return Area::None;
+        }
+
+        match &name[1..] {
+            "t" => Area::Top,
+            "b" => Area::Bottom,
+            "l" => Area::Left,
+            "r" => Area::Right,
+            "x" => Area::Horizontal,
+            "y" => Area::Vertical,
+            _ => Area::None
+        }
+    }
+
+    fn generate_variant(name: &str, variant: &str, value: &str) -> Option<String> {
+        let property = Self::get_property(name.to_string())?;
+        return match Self::get_area(name.to_string()) {
+            Area::None => {
+                Some(
+                    format!(".{} {{\n\t{}: {};\n}}", name, property, value)
+                )
+            }
+            Area::Top => {
+                Some(
+                    format!(".{}-{} {{\n\t{}-top: {};\n}}", name, variant, property, value)
+                )
+            }
+            Area::Bottom => {
+                Some(
+                    format!(".{}-{} {{\n\t{}-bottom: {};\n}}", name, variant, property, value)
+                )
+            }
+            Area::Left => {
+                Some(
+                    format!(".{}-{} {{\n\t{}-left: {};\n}}", name, variant, property, value)
+                )
+            }
+            Area::Right => {
+                Some(
+                    format!(".{}-{} {{\n\t{}-right: {};\n}}", name, variant, property, value)
+                )
+            }
+            Area::Vertical => {
+                let body = format!("{property}-top: {value};\n\t{property}-bottom: {value};", property=property, value=value);
+                Some(
+                    format!(".{}-{} {{\n\t{}\n}}", name, variant, body)
+                )
+            }
+            Area::Horizontal => {
+                let body = format!("{property}-left: {value};\n\t{property}-right: {value};", property=property, value=value);
+                Some(
+                    format!(".{}-{} {{\n\t{}\n}}", name, variant, body)
+                )
+            }
+        };
     }
 
     fn append_css(&mut self, css: &str) {
@@ -42,85 +119,32 @@ impl Css {
     }
 
     pub fn generate_padding(&mut self, prefix: &str, line: &str) {
-        let mut space = line.split('-').last().unwrap().to_string();
-        let mut space_size = String::new();
-        if let Some(size) = self.config.get_spacing(&space) {
-            space_size.push_str(size);
+        let mut variant = line.split('-').last().unwrap().to_string();
+        let mut value = String::new();
+        if let Some(size) = self.config.get_spacing(&variant) {
+            value.push_str(size);
         } else {
             return;
         }
 
-        space = space.replace(".", "\\.");
-        match prefix {
-            "p" => {
-                let css = &format!(".p-{} {{\n\tpadding: {};\n}}", space, space_size);
-                self.append_css(css);
-            }
-            "pt" => {
-                let css = &format!(".pt-{} {{\n\tpadding-top: {};\n}}", space, space_size);
-                self.append_css(css);
-            }
-            "pb" => {
-                let css = &format!(".pb-{} {{\n\tpadding-bottom: {};\n}}", space, space_size);
-                self.append_css(css);
-            }
-            "pl" => {
-                let css = &format!(".pl-{} {{\n\tpadding-left: {};\n}}", space, space_size);
-                self.append_css(css);
-            }
-            "pr" => {
-                let css = &format!(".pb-{} {{\n\tpadding-right: {};\n}}", space, space_size);
-                self.append_css(css);
-            }
-            "py" => {
-                let css = &format!(
-                    ".py-{} {{\n\tpadding-top: {};\n\tpadding-bottom: {};\n}}",
-                    space, space_size, space_size
-                );
-                self.append_css(css);
-            }
-            "px" => {
-                let css = &format!(
-                    ".px-{} {{\n\tpadding-left: {};\n\tpadding-right: {};\n}}",
-                    space, space_size, space_size
-                );
-                self.append_css(css);
-            }
-            _ => {}
-        };
+        variant = variant.replace(".", "\\.");
+        if let Some(css) = Self::generate_variant(prefix, &variant, &value) {
+            self.append_css(&css);
+        }
     }
 
     pub fn generate_margin(&mut self, prefix: &str, line: &str) {
-        let mut space = line.split('-').last().unwrap().to_string();
-        let mut variant = String::new();
-        if let Some(size) = self.config.get_margin(&space) {
-            variant.push_str(size);
+        let mut variant = line.split('-').last().unwrap().to_string();
+        let mut value = String::new();
+        if let Some(size) = self.config.get_margin(&variant) {
+            value.push_str(size);
         } else {
             return;
         }
 
-        space = space.replace(".", "\\.");
-        match prefix {
-            "m" => {
-                let css = &format!(".m-{} {{\n\tmargin: {};\n}}", space, variant);
-                self.append_css(css);
-            }
-            "mt" => {
-                let css = &format!(".mt-{} {{\n\tmargin-top: {};\n}}", space, variant);
-                self.append_css(css);
-            }
-            "mb" => {
-                let css = &format!(".mb-{} {{\n\tmargin-bottom: {};\n}}", space, variant);
-                self.append_css(css);
-            }
-            "mx" => {
-                let css = &format!(
-                    ".mx-{} {{\n\tmargin-left: {};\n\tmargin-right: {};\n}}",
-                    space, variant, variant
-                );
-                self.append_css(css);
-            }
-            _ => {}
+        variant = variant.replace(".", "\\.");
+        if let Some(css) = Self::generate_variant(prefix, &variant, &value) {
+            self.append_css(&css);
         }
     }
 
