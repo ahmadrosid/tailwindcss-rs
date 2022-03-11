@@ -46,7 +46,7 @@ fn collect_css(node: &Handle, css: &mut Css) {
     }
 }
 
-fn parse(handle: &Handle) -> HashSet<String> {
+fn process(handle: &Handle) -> HashSet<String> {
     let mut css = Css::new();
 
     collect_css(handle, &mut css);
@@ -54,7 +54,7 @@ fn parse(handle: &Handle) -> HashSet<String> {
     css.source
 }
 
-pub fn process(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
+pub fn parse(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
     let opts = ParseOpts {
         tree_builder: TreeBuilderOpts {
             drop_doctype: true,
@@ -65,7 +65,7 @@ pub fn process(path: &Path) -> Result<HashSet<String>, Box<dyn Error>> {
     let dom = parse_document(RcDom::default(), opts)
         .from_utf8()
         .from_file(path)?;
-    let result = parse(&dom.document);
+    let result = process(&dom.document);
 
     Ok(result)
 }

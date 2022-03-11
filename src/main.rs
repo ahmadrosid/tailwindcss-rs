@@ -1,7 +1,7 @@
 extern crate html5ever;
 mod config;
 mod generator;
-mod parser;
+mod html;
 
 extern crate notify;
 
@@ -21,7 +21,7 @@ fn watch(source: &str, output: &str) -> notify::Result<()> {
 
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
 
-    let css = parser::process(Path::new(&source)).unwrap();
+    let css = html::parse(Path::new(&source)).unwrap();
     generator::generate(&css, output, &config);
 
     loop {
@@ -38,7 +38,7 @@ fn watch(source: &str, output: &str) -> notify::Result<()> {
             | DebouncedEvent::Write(path)
             | DebouncedEvent::Create(path)
             | DebouncedEvent::Chmod(path) => {
-                let css = parser::process(&path).unwrap();
+                let css = html::parse(&path).unwrap();
                 generator::generate(&css, output, &config);
             }
             _ => (),
