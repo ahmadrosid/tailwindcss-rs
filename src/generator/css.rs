@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::{BufWriter, Write};
 
 enum Area {
+    All,
     Left,
     Right,
     Top,
@@ -34,7 +35,7 @@ impl Css {
 
     fn get_area(name: &str) -> Area {
         if name.len() == 1 {
-            return Area::None;
+            return Area::All;
         }
 
         match &name[1..] {
@@ -51,7 +52,7 @@ impl Css {
     fn generate_variant(name: &str, variant: &str, value: &str) -> Option<String> {
         let property = Self::get_property(name)?;
         return match Self::get_area(name) {
-            Area::None => {
+            Area::All => {
                 Some(
                     format!(".{} {{\n\t{}: {};\n}}", name, property, value)
                 )
@@ -88,6 +89,7 @@ impl Css {
                     format!(".{}-{} {{\n\t{}\n}}", name, variant, body)
                 )
             }
+            _ => None
         };
     }
 
@@ -233,6 +235,15 @@ impl Css {
         let value = self.config.get_break_point(&format!(".{}", line));
         if let Some(val) = value {
             let (key, val) = val.as_object().unwrap().iter().next().unwrap();
+            let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
+            self.append_css(css);
+        }
+    }
+
+    pub fn generate_box_decoration(&mut self, line: &str) {
+        let key = &format!(".{}", line);
+        if let Some(value) = self.config.get_box_decoration_break(key) {
+            let (key, val) = value.as_object().unwrap().iter().next().unwrap();
             let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
             self.append_css(css);
         }

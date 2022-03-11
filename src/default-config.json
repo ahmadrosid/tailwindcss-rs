@@ -556,5 +556,19 @@
     ".break-inside-avoid-column": {
       "break-inside": "avoid-column"
     }
+  },
+  "box-decoration-break": {
+    ".decoration-slice": {
+      "box-decoration-break": "slice"
+    },
+    ".decoration-clone": {
+      "box-decoration-break": "clone"
+    },
+    ".box-decoration-slice": {
+      "box-decoration-break": "slice"
+    },
+    ".box-decoration-clone": {
+      "box-decoration-break": "clone"
+    }
   }
 }

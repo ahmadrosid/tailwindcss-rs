@@ -17,6 +17,7 @@ pub struct Config {
     width: HashMap<String, String>,
     columns: HashMap<String, String>,
     margin: HashMap<String, String>,
+    box_decoration_break: Map<String, Value>,
     break_point: Map<String, Value>,
     color: Map<String, Value>,
 }
@@ -54,6 +55,10 @@ impl Config {
         self.width.get(key)
     }
 
+    pub fn get_box_decoration_break(&self, key: &str) -> Option<&Value> {
+        self.box_decoration_break.get(key)
+    }
+
     pub fn get_color_map(&self, key: &str) -> Option<&Map<String, Value>> {
         self.color.get(key).unwrap().as_object()
     }
@@ -89,6 +94,7 @@ impl Config {
             width: extract_hash_map(&obj, "width"),
             columns: extract_hash_map(&obj, "columns"),
             margin: extract_hash_map(&obj, "margin"),
+            box_decoration_break: extract_object(&obj, "box-decoration-break")
         };
 
         Ok(config)

@@ -51,11 +51,6 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
             }
 
             for line in source.iter() {
-                // let class = line.replace(".", "\\.").replace("/", "\\/");
-                // if data.contains(&format!(".{}", &class)) {
-                //     continue;
-                // }
-
                 if line.starts_with("text-") {
                     generator.generate_font_size(line);
                 } else if line.starts_with("font-") {
@@ -99,6 +94,11 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
 
                 if handle_prefix(line, "break").is_some() {
                     generator.generate_break_point(line);
+                    continue;
+                }
+
+                if handle_prefix(line, "box-decoration").is_some() {
+                    generator.generate_box_decoration(line);
                     continue;
                 }
             }
