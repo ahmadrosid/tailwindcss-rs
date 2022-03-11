@@ -22,7 +22,8 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         width: extract_hash_map(&obj, "width"),
         columns: extract_hash_map(&obj, "columns"),
         margin: extract_hash_map(&obj, "margin"),
-        box_decoration_break: extract_object(&obj, "box-decoration-break")
+        box_decoration_break: extract_object(&obj, "box-decoration-break"),
+        box_sizing: extract_object(&obj, "box-sizing"),
     };
 
     Ok(config)

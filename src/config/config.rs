@@ -18,6 +18,7 @@ pub struct Config {
     pub columns: HashMap<String, String>,
     pub margin: HashMap<String, String>,
     pub box_decoration_break: Map<String, Value>,
+    pub box_sizing: Map<String, Value>,
     pub break_point: Map<String, Value>,
     pub color: Map<String, Value>,
 }

@@ -1,17 +1,8 @@
 use crate::config::Config;
+use crate::generator::generate_variant;
+
 use std::fs::File;
 use std::io::{BufWriter, Write};
-
-enum Area {
-    All,
-    Left,
-    Right,
-    Top,
-    Bottom,
-    Vertical,
-    Horizontal,
-    None
-}
 
 pub struct Css {
     config: Config,
@@ -23,74 +14,6 @@ impl Css {
         let file = file.try_clone().unwrap();
         let writer = BufWriter::new(Box::new(file));
         Self { config, writer }
-    }
-
-    fn get_property(name: &str) -> Option<&'static str> {
-        match &name[0..1] {
-            "p" => Some("padding"),
-            "m" => Some("margin"),
-            _ => None
-        }
-    }
-
-    fn get_area(name: &str) -> Area {
-        if name.len() == 1 {
-            return Area::All;
-        }
-
-        match &name[1..] {
-            "t" => Area::Top,
-            "b" => Area::Bottom,
-            "l" => Area::Left,
-            "r" => Area::Right,
-            "x" => Area::Horizontal,
-            "y" => Area::Vertical,
-            _ => Area::None
-        }
-    }
-
-    fn generate_variant(name: &str, variant: &str, value: &str) -> Option<String> {
-        let property = Self::get_property(name)?;
-        return match Self::get_area(name) {
-            Area::All => {
-                Some(
-                    format!(".{} {{\n\t{}: {};\n}}", name, property, value)
-                )
-            }
-            Area::Top => {
-                Some(
-                    format!(".{}-{} {{\n\t{}-top: {};\n}}", name, variant, property, value)
-                )
-            }
-            Area::Bottom => {
-                Some(
-                    format!(".{}-{} {{\n\t{}-bottom: {};\n}}", name, variant, property, value)
-                )
-            }
-            Area::Left => {
-                Some(
-                    format!(".{}-{} {{\n\t{}-left: {};\n}}", name, variant, property, value)
-                )
-            }
-            Area::Right => {
-                Some(
-                    format!(".{}-{} {{\n\t{}-right: {};\n}}", name, variant, property, value)
-                )
-            }
-            Area::Vertical => {
-                let body = format!("{property}-top: {value};\n\t{property}-bottom: {value};", property=property, value=value);
-                Some(
-                    format!(".{}-{} {{\n\t{}\n}}", name, variant, body)
-                )
-            }
-            Area::Horizontal => {
-                let body = format!("{property}-left: {value};\n\t{property}-right: {value};", property=property, value=value);
-                Some(
-                    format!(".{}-{} {{\n\t{}\n}}", name, variant, body)
-                )
-            }
-            _ => None
-        };
     }
 
     fn append_css(&mut self, css: &str) {
@@ -130,7 +53,7 @@ impl Css {
         }
 
         variant = variant.replace(".", "\\.");
-        if let Some(css) = Self::generate_variant(prefix, &variant, &value) {
+        if let Some(css) = generate_variant(prefix, &variant, &value) {
             self.append_css(&css);
         }
     }
@@ -145,7 +68,7 @@ impl Css {
         }
 
         variant = variant.replace(".", "\\.");
-        if let Some(css) = Self::generate_variant(prefix, &variant, &value) {
+        if let Some(css) = generate_variant(prefix, &variant, &value) {
             self.append_css(&css);
         }
     }
@@ -243,6 +166,15 @@ impl Css {
     pub fn generate_box_decoration(&mut self, line: &str) {
         let key = &format!(".{}", line);
         if let Some(value) = self.config.get_box_decoration_break(key) {
+            let (key, val) = value.as_object().unwrap().iter().next().unwrap();
+            let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
+            self.append_css(css);
+        }
+    }
+
+    pub fn generate_box_sizing(&mut self, line: &str) {
+        let key = &format!(".{}", line);
+        if let Some(value) = self.config.box_sizing.get(key) {
             let (key, val) = value.as_object().unwrap().iter().next().unwrap();
             let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
             self.append_css(css);
