@@ -6,7 +6,6 @@ mod parser;
 extern crate notify;
 
 use clap::Parser;
-use config::Config;
 use notify::{DebouncedEvent, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::Path;
 use std::sync::mpsc::channel;
@@ -14,7 +13,7 @@ use std::time::Duration;
 
 fn watch(source: &str, output: &str) -> notify::Result<()> {
     let config_source = include_str!("default-config.json");
-    let config = Config::parse(config_source).unwrap();
+    let config = config::parse(config_source).unwrap();
 
     let (tx, rx) = channel();
 
