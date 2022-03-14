@@ -180,4 +180,15 @@ impl Css {
             self.append_css(css);
         }
     }
+
+    pub fn generate_display(&mut self, line: &str) -> Option<()>{
+        let key = &format!(".{}", line);
+        if let Some((attribute, value)) = self.config.get_display(key) {
+            let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
+            self.append_css(css);
+            return Some(());
+        }
+
+        None
+    }
 }

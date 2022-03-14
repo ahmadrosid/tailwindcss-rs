@@ -73,6 +73,6 @@ pub fn generate_variant(name: &str, variant: &str, value: &str) -> Option<String
                 format!(".{}-{} {{\n\t{}\n}}", name, variant, body)
             )
         }
-        _ => None
+        Area::None => None
     };
 }

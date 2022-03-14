@@ -53,8 +53,10 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
             for line in source.iter() {
                 if line.starts_with("text-") {
                     generator.generate_font_size(line);
+                    continue;
                 } else if line.starts_with("font-") {
                     generator.generate_font_weight(line);
+                    continue;
                 }
 
                 if let Some(prefix) = handle_spacing(line, "p") {
@@ -104,6 +106,10 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
 
                 if handle_prefix(line, "box").is_some() {
                     generator.generate_box_sizing(line);
+                    continue;
+                }
+
+                if generator.generate_display(line).is_some() {
                     continue;
                 }
             }
