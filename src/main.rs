@@ -14,11 +14,8 @@ use std::time::Duration;
 fn watch(source: &str, output: &str) -> notify::Result<()> {
     let config_source = include_str!("default-config.json");
     let config = config::parse(config_source).unwrap();
-
     let (tx, rx) = channel();
-
-    let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_secs(2))?;
-
+    let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_millis(500))?;
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
 
     let css = html::parse(Path::new(&source)).unwrap();
