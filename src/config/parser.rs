@@ -28,6 +28,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         visibility: extract_object(&obj, "visibility"),
         float: extract_object(&obj, "float"),
         clear: extract_object(&obj, "clear"),
+        object_fit: extract_object(&obj, "object-fit"),
     };
 
     Ok(config)

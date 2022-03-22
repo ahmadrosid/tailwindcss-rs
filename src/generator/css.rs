@@ -218,4 +218,12 @@ impl Css {
         self.append_css(css);
         return Some(());
     }
+
+    pub fn generate_object_fit(&mut self, line: &str) -> Option<()>{
+        let key = &format!(".{}", line);
+        let (attribute, value) = self.config.get_object_fit(key)?;
+        let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
+        self.append_css(css);
+        return Some(());
+    }
 }

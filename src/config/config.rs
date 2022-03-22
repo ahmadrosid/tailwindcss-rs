@@ -25,6 +25,7 @@ pub struct Config {
     pub color: Map<String, Value>,
     pub display: Map<String, Value>,
     pub clear: Map<String, Value>,
+    pub object_fit: Map<String, Value>,
 }
 
 impl Config {
@@ -101,5 +102,9 @@ impl Config {
 
     pub fn get_clear(&self, key: &str) -> Option<(&str, &str)> {
         Self::get_obj(&self.clear, key.to_string())        
+    }
+
+    pub fn get_object_fit(&self, key: &str) -> Option<(&str, &str)> {
+        Self::get_obj(&self.object_fit, key.to_string())        
     }
 }
