@@ -643,5 +643,9 @@
     ".hidden": {
       "display": "none"
     }
+  },
+  "visibility": {
+    ".visible": { "visibility": "visible" },
+    ".invisible": { "visibility": "hidden" }
   }
 }

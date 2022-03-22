@@ -25,6 +25,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         box_decoration_break: extract_object(&obj, "box-decoration-break"),
         box_sizing: extract_object(&obj, "box-sizing"),
         display: extract_object(&obj, "display"),
+        visibility: extract_object(&obj, "visibility"),
     };
 
     Ok(config)

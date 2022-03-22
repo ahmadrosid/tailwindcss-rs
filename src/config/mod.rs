@@ -23,6 +23,7 @@ pub struct Config {
     pub box_decoration_break: Map<String, Value>,
     pub box_sizing: Map<String, Value>,
     pub break_point: Map<String, Value>,
+    pub visibility: Map<String, Value>,
     pub color: Map<String, Value>,
     pub display: Map<String, Value>,
 }
@@ -83,6 +84,13 @@ impl Config {
     pub fn get_display(&self, key: &str) -> Option<(&str, &str)> {
         let display = self.display.get(key)?.as_object()?;
         let (key, value) = display.iter().next()?;
+        let value = value.as_str()?;
+        Some((key, value))
+    }
+
+    pub fn get_visibility(&self, key: &str) -> Option<(&str, &str)> {
+        let data = self.visibility.get(key)?.as_object()?;
+        let (key, value) = data.iter().next()?;
         let value = value.as_str()?;
         Some((key, value))
     }

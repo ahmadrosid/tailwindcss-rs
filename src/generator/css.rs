@@ -191,4 +191,15 @@ impl Css {
 
         None
     }
+
+    pub fn generate_visibility(&mut self, line: &str) -> Option<()>{
+        let key = &format!(".{}", line);
+        if let Some((attribute, value)) = self.config.get_visibility(key) {
+            let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
+            self.append_css(css);
+            return Some(());
+        }
+
+        None
+    }
 }
