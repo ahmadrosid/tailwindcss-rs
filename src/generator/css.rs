@@ -190,6 +190,7 @@ impl Css {
             &self.config.object_fit,
             &self.config.overflow,
             &self.config.overscroll_behavior,
+            &self.config.position,
         ];
 
         for plugin in plugins {

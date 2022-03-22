@@ -28,6 +28,7 @@ pub struct Config {
     pub object_fit: Map<String, Value>,
     pub overflow: Map<String, Value>,
     pub overscroll_behavior: Map<String, Value>,
+    pub position: Map<String, Value>,
 }
 
 impl Config {

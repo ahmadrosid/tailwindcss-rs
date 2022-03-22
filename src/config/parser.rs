@@ -31,6 +31,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         object_fit: extract_object(&obj, "object-fit"),
         overflow: extract_object(&obj, "overflow"),
         overscroll_behavior: extract_object(&obj, "overscroll-behavior"),
+        position: extract_object(&obj, "position"),
     };
 
     Ok(config)
