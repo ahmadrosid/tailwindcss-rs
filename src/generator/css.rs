@@ -187,7 +187,8 @@ impl Css {
             &self.config.visibility,
             &self.config.float,
             &self.config.clear,
-            &self.config.object_fit
+            &self.config.object_fit,
+            &self.config.overflow,
         ];
 
         for plugin in plugins {

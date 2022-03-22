@@ -26,6 +26,7 @@ pub struct Config {
     pub display: Map<String, Value>,
     pub clear: Map<String, Value>,
     pub object_fit: Map<String, Value>,
+    pub overflow: Map<String, Value>,
 }
 
 impl Config {

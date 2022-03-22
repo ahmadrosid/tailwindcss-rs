@@ -29,6 +29,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         float: extract_object(&obj, "float"),
         clear: extract_object(&obj, "clear"),
         object_fit: extract_object(&obj, "object-fit"),
+        overflow: extract_object(&obj, "overflow"),
     };
 
     Ok(config)

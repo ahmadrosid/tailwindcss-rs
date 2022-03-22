@@ -289,5 +289,6 @@
   "float": {".float-right":{"float":"right"},".float-left":{"float":"left"},".float-none":{"float":"none"}},
   "clear": {".clear-left":{"clear":"left"},".clear-right":{"clear":"right"},".clear-both":{"clear":"both"},".clear-none":{"clear":"none"}},
   "isolation": {".isolate":{"isolation":"isolate"},".isolation-auto":{"isolation":"auto"}},
-  "object-fit": {".object-contain":{"object-fit":"contain"},".object-cover":{"object-fit":"cover"},".object-fill":{"object-fit":"fill"},".object-none":{"object-fit":"none"},".object-scale-down":{"object-fit":"scale-down"}}
+  "object-fit": {".object-contain":{"object-fit":"contain"},".object-cover":{"object-fit":"cover"},".object-fill":{"object-fit":"fill"},".object-none":{"object-fit":"none"},".object-scale-down":{"object-fit":"scale-down"}},
+  "overflow": {".overflow-auto":{"overflow":"auto"},".overflow-hidden":{"overflow":"hidden"},".overflow-clip":{"overflow":"clip"},".overflow-visible":{"overflow":"visible"},".overflow-scroll":{"overflow":"scroll"},".overflow-x-auto":{"overflow-x":"auto"},".overflow-y-auto":{"overflow-y":"auto"},".overflow-x-hidden":{"overflow-x":"hidden"},".overflow-y-hidden":{"overflow-y":"hidden"},".overflow-x-clip":{"overflow-x":"clip"},".overflow-y-clip":{"overflow-y":"clip"},".overflow-x-visible":{"overflow-x":"visible"},".overflow-y-visible":{"overflow-y":"visible"},".overflow-x-scroll":{"overflow-x":"scroll"},".overflow-y-scroll":{"overflow-y":"scroll"}}
 }
