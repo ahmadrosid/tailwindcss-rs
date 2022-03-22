@@ -181,49 +181,24 @@ impl Css {
         }
     }
 
-    pub fn generate_display(&mut self, line: &str) -> Option<()>{
-        let key = &format!(".{}", line);
-        if let Some((attribute, value)) = self.config.get_display(key) {
-            let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
-            self.append_css(css);
-            return Some(());
+    pub fn generate_plugin(&mut self, line: &str) -> Option<()> {
+        let plugins = vec![
+            &self.config.display,
+            &self.config.visibility,
+            &self.config.float,
+            &self.config.clear,
+            &self.config.object_fit
+        ];
+
+        for plugin in plugins {
+            let key = format!(".{}", line);
+            if let Some((attribute, value)) = Config::get_obj(&plugin, &key) {
+                let css = &format!("{} {{\n\t{}: {};\n}}", &key, attribute, value);
+                self.append_css(css);
+                return Some(())
+            }
         }
 
-        None
-    }
-
-    pub fn generate_visibility(&mut self, line: &str) -> Option<()>{
-        let key = &format!(".{}", line);
-        if let Some((attribute, value)) = self.config.get_visibility(key) {
-            let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
-            self.append_css(css);
-            return Some(());
-        }
-
-        None
-    }
-
-    pub fn generate_float(&mut self, line: &str) -> Option<()>{
-        let key = &format!(".{}", line);
-        let (attribute, value) = self.config.get_float(key)?;
-        let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
-        self.append_css(css);
-        return Some(());
-    }
-
-    pub fn generate_clear(&mut self, line: &str) -> Option<()>{
-        let key = &format!(".{}", line);
-        let (attribute, value) = self.config.get_clear(key)?;
-        let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
-        self.append_css(css);
-        return Some(());
-    }
-
-    pub fn generate_object_fit(&mut self, line: &str) -> Option<()>{
-        let key = &format!(".{}", line);
-        let (attribute, value) = self.config.get_object_fit(key)?;
-        let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
-        self.append_css(css);
-        return Some(());
+        return None
     }
 }

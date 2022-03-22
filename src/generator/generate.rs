@@ -111,23 +111,7 @@ pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
                     continue;
                 }
 
-                if generator.generate_display(line).is_some() {
-                    continue;
-                }
-
-                if generator.generate_visibility(line).is_some() {
-                    continue;
-                }
-
-                if generator.generate_float(line).is_some() {
-                    continue;
-                }
-
-                if generator.generate_clear(line).is_some() {
-                    continue;
-                }
-
-                if generator.generate_object_fit(line).is_some() {
+                if generator.generate_plugin(line).is_some() {
                     continue;
                 }
             }
