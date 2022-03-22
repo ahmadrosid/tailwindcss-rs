@@ -24,6 +24,7 @@ pub struct Config {
     pub box_sizing: Map<String, Value>,
     pub break_point: Map<String, Value>,
     pub visibility: Map<String, Value>,
+    pub float: Map<String, Value>,
     pub color: Map<String, Value>,
     pub display: Map<String, Value>,
 }
@@ -90,6 +91,13 @@ impl Config {
 
     pub fn get_visibility(&self, key: &str) -> Option<(&str, &str)> {
         let data = self.visibility.get(key)?.as_object()?;
+        let (key, value) = data.iter().next()?;
+        let value = value.as_str()?;
+        Some((key, value))
+    }
+
+    pub fn get_float(&self, key: &str) -> Option<(&str, &str)> {
+        let data = self.float.get(key)?.as_object()?;
         let (key, value) = data.iter().next()?;
         let value = value.as_str()?;
         Some((key, value))

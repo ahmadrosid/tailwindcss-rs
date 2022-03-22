@@ -202,4 +202,13 @@ impl Css {
 
         None
     }
+
+    pub fn generate_float(&mut self, line: &str) -> Option<()>{
+        let key = &format!(".{}", line);
+        let (attribute, value) = self.config.get_float(key)?;
+        let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
+        self.append_css(css);
+        return Some(());
+
+    }
 }

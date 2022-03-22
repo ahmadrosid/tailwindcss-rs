@@ -647,5 +647,6 @@
   "visibility": {
     ".visible": { "visibility": "visible" },
     ".invisible": { "visibility": "hidden" }
-  }
+  },
+  "float": {".float-right":{"float":"right"},".float-left":{"float":"left"},".float-none":{"float":"none"}}
 }
