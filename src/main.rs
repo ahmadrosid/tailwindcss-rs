@@ -1,31 +1,38 @@
 extern crate html5ever;
+extern crate notify;
 mod config;
 mod generator;
 mod html;
-
-extern crate notify;
 
 use clap::Parser;
 use notify::{DebouncedEvent, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
+use log::{info, warn};
 
-fn watch(source: &str, output: &str) -> notify::Result<()> {
+fn watch(source: &str, output: &str, should_watch: &bool) -> notify::Result<()> {
     let config_source = include_str!("default-config.json");
     let config = config::parse(config_source).unwrap();
+    let css = html::parse(Path::new(&source)).unwrap();
+    generator::generate(&css, output, &config);
+
+    info!("CSS generated: {}!", output);
+    if !should_watch {
+        std::process::exit(0);
+    }
+    
     let (tx, rx) = channel();
     let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_millis(500))?;
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
-
-    let css = html::parse(Path::new(&source)).unwrap();
-    generator::generate(&css, output, &config);
+    
+    info!("Start watching file: {}!", &source);
 
     loop {
         let event = match rx.recv() {
             Ok(event) => event,
             Err(err) => {
-                println!("Config watcher channel dropped unexpectedly: {}", err);
+                info!("Config watcher channel dropped unexpectedly: {}", err);
                 break;
             }
         };
@@ -37,6 +44,7 @@ fn watch(source: &str, output: &str) -> notify::Result<()> {
             | DebouncedEvent::Chmod(path) => {
                 let css = html::parse(&path).unwrap();
                 generator::generate(&css, output, &config);
+                info!("CSS {} updated!", output);
             }
             _ => (),
         }
@@ -50,18 +58,24 @@ fn watch(source: &str, output: &str) -> notify::Result<()> {
 struct Application {
     /// Source directories for html files!
     #[clap(short, long)]
-    source: String,
+    input: String,
 
     /// Css output path
     #[clap(short, long)]
     output: String,
+
+    /// Watch file changes
+    #[clap(short, long)]
+    watch: bool,
 }
 
 fn main() {
+    env_logger::init();
+
     let args = Application::parse();
 
-    if let Err(e) = watch(&args.source, &args.output) {
-        println!("error: {:?}", e);
+    if let Err(e) = watch(&args.input, &args.output,  &args.watch) {
+        warn!("error: {:?}", e);
         std::process::exit(1);
     }
 }

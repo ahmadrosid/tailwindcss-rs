@@ -122,5 +122,4 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
             println!("Unable to read file: {}", output);
         }
     }
-    println!("Css updated: {}!", output);
 }
