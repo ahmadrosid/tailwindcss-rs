@@ -189,6 +189,7 @@ impl Css {
             &self.config.clear,
             &self.config.object_fit,
             &self.config.overflow,
+            &self.config.overscroll_behavior,
         ];
 
         for plugin in plugins {
