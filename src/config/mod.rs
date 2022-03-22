@@ -30,6 +30,13 @@ pub struct Config {
 }
 
 impl Config {
+    fn get_obj<'a>(data: &'a Map<String, Value>, data_key: String) -> Option<(&'a str, &'a str)> {
+        let display = data.get(&data_key)?.as_object()?;
+        let (key, value) = display.iter().next()?;
+        let value = value.as_str()?;
+        Some((key, value))
+    }
+
     pub fn get_font_size(&self, key: &str) -> Option<&FontSize> {
         self.font_size.get(key)
     }
@@ -83,23 +90,14 @@ impl Config {
     }
 
     pub fn get_display(&self, key: &str) -> Option<(&str, &str)> {
-        let display = self.display.get(key)?.as_object()?;
-        let (key, value) = display.iter().next()?;
-        let value = value.as_str()?;
-        Some((key, value))
+        Self::get_obj(&self.display, key.to_string())
     }
 
     pub fn get_visibility(&self, key: &str) -> Option<(&str, &str)> {
-        let data = self.visibility.get(key)?.as_object()?;
-        let (key, value) = data.iter().next()?;
-        let value = value.as_str()?;
-        Some((key, value))
+        Self::get_obj(&self.visibility, key.to_string())
     }
 
     pub fn get_float(&self, key: &str) -> Option<(&str, &str)> {
-        let data = self.float.get(key)?.as_object()?;
-        let (key, value) = data.iter().next()?;
-        let value = value.as_str()?;
-        Some((key, value))
+        Self::get_obj(&self.float, key.to_string())        
     }
 }
