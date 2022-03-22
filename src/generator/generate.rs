@@ -1,3 +1,5 @@
+use log::warn;
+
 use crate::config::Config;
 use crate::generator::Css;
 
@@ -33,7 +35,7 @@ fn handle_prefix(line: &str, prefix: &str) -> Option<String> {
     }
 }
 
-pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
+pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
     let css_file = std::fs::OpenOptions::new()
         .write(true)
         .create(true)
@@ -123,7 +125,7 @@ pub fn generate(source: &HashSet<String>, output: &str, config_json: &Config) {
             }
         }
         _ => {
-            println!("Unable to read file: {}", output);
+            warn!("Unable to read file: {}", output);
         }
     }
 }

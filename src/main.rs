@@ -15,7 +15,7 @@ fn watch(source: &str, output: &str, should_watch: &bool) -> notify::Result<()> 
     let config_source = include_str!("default-config.json");
     let config = config::parse(config_source).unwrap();
     let css = html::parse(Path::new(&source)).unwrap();
-    generator::generate(&css, output, &config);
+    generator::execute(&css, output, &config);
 
     info!("CSS generated: {}!", output);
     if !should_watch {
@@ -43,7 +43,7 @@ fn watch(source: &str, output: &str, should_watch: &bool) -> notify::Result<()> 
             | DebouncedEvent::Create(path)
             | DebouncedEvent::Chmod(path) => {
                 let css = html::parse(&path).unwrap();
-                generator::generate(&css, output, &config);
+                generator::execute(&css, output, &config);
                 info!("CSS {} updated!", output);
             }
             _ => (),
