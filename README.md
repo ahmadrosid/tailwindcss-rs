@@ -22,3 +22,6 @@ Example cli usage:
 ```shell
 tailwind-rs -i index.html -o output.css
 ```
+
+## WIP
+There's a lot of utility to be added. See [default-config.json](/src/default-config.json) for available utility.
