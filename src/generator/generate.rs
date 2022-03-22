@@ -122,6 +122,10 @@ pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
                 if generator.generate_float(line).is_some() {
                     continue;
                 }
+
+                if generator.generate_clear(line).is_some() {
+                    continue;
+                }
             }
         }
         _ => {

@@ -648,5 +648,6 @@
     ".visible": { "visibility": "visible" },
     ".invisible": { "visibility": "hidden" }
   },
-  "float": {".float-right":{"float":"right"},".float-left":{"float":"left"},".float-none":{"float":"none"}}
+  "float": {".float-right":{"float":"right"},".float-left":{"float":"left"},".float-none":{"float":"none"}},
+  "clear": {".clear-left":{"clear":"left"},".clear-right":{"clear":"right"},".clear-both":{"clear":"both"},".clear-none":{"clear":"none"}}
 }

@@ -209,6 +209,13 @@ impl Css {
         let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
         self.append_css(css);
         return Some(());
+    }
 
+    pub fn generate_clear(&mut self, line: &str) -> Option<()>{
+        let key = &format!(".{}", line);
+        let (attribute, value) = self.config.get_clear(key)?;
+        let css = &format!("{} {{\n\t{}: {};\n}}", key, attribute, value);
+        self.append_css(css);
+        return Some(());
     }
 }
