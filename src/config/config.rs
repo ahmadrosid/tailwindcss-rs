@@ -53,12 +53,17 @@ impl Config {
     ) -> Option<String> {
         let item = data.get(data_key)?;
         let properties = item.as_array()?;
-        let margin = self.get_margin(key_val)?;
+        let mut variant = self.get_margin(key_val);
+
+        // TODO: clean up
+        if variant.is_none() && data_key == "w" {
+            variant = self.get_width(key_val);
+        }
 
         let value = if is_negative {
-            format!("-{}", margin)
+            format!("-{}", variant?)
         } else {
-            margin.to_string()
+            variant?.to_string()
         };
 
         let mut css_properties_value = String::new();
@@ -75,10 +80,6 @@ impl Config {
 
     pub fn get_font_weight(&self, key: &str) -> Option<&String> {
         self.font_weight.get(key)
-    }
-
-    pub fn get_spacing(&self, key: &str) -> Option<&String> {
-        self.spacing.get(key)
     }
 
     pub fn get_line_height(&self, key: &str) -> Option<&String> {

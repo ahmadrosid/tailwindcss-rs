@@ -154,6 +154,7 @@ impl Css {
         let key = line.split("-").collect::<Vec<_>>();
         let key_len = key.len();
         let is_negative = key_len >= 3 && key[0] == "";
+        let class_name = line.replace(".", "\\.").replace("/", "\\/");
         let name = match key_len {
             2 => key[0].to_string(),
             3 => {
@@ -178,7 +179,7 @@ impl Css {
                 self.config
                     .get_plugin_value(plugin, &name, key.last()?, is_negative)
             {
-                let css = &format!(".{} {{\n{}}}", &line.replace(".", "\\."), css_properties);
+                let css = &format!(".{} {{\n{}}}", class_name, css_properties);
                 self.append_css(css);
                 return Some(());
             }
