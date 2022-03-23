@@ -23,5 +23,10 @@
   "overflow": {".overflow-auto":{"overflow":"auto"},".overflow-hidden":{"overflow":"hidden"},".overflow-clip":{"overflow":"clip"},".overflow-visible":{"overflow":"visible"},".overflow-scroll":{"overflow":"scroll"},".overflow-x-auto":{"overflow-x":"auto"},".overflow-y-auto":{"overflow-y":"auto"},".overflow-x-hidden":{"overflow-x":"hidden"},".overflow-y-hidden":{"overflow-y":"hidden"},".overflow-x-clip":{"overflow-x":"clip"},".overflow-y-clip":{"overflow-y":"clip"},".overflow-x-visible":{"overflow-x":"visible"},".overflow-y-visible":{"overflow-y":"visible"},".overflow-x-scroll":{"overflow-x":"scroll"},".overflow-y-scroll":{"overflow-y":"scroll"}},
   "overscroll-behavior": {".overscroll-auto":{"overscroll-behavior":"auto"},".overscroll-contain":{"overscroll-behavior":"contain"},".overscroll-none":{"overscroll-behavior":"none"},".overscroll-y-auto":{"overscroll-behavior-y":"auto"},".overscroll-y-contain":{"overscroll-behavior-y":"contain"},".overscroll-y-none":{"overscroll-behavior-y":"none"},".overscroll-x-auto":{"overscroll-behavior-x":"auto"},".overscroll-x-contain":{"overscroll-behavior-x":"contain"},".overscroll-x-none":{"overscroll-behavior-x":"none"}},
   "position": {".static":{"position":"static"},".fixed":{"position":"fixed"},".absolute":{"position":"absolute"},".relative":{"position":"relative"},".sticky":{"position":"sticky"}},
-  "inset": [["inset",["top","right","bottom","left"]],[["inset-x",["left","right"]],["inset-y",["top","bottom"]]],[["top",["top"]],["right",["right"]],["bottom",["bottom"]],["left",["left"]]]]
+  "plugins": {
+    "margin": [["m",["margin"]],[["mx",["margin-left","margin-right"]],["my",["margin-top","margin-bottom"]]],[["mt",["margin-top"]],["mr",["margin-right"]],["mb",["margin-bottom"]],["ml",["margin-left"]]]],
+    "padding": [["p",["padding"]],[["px",["padding-left","padding-right"]],["py",["padding-top","padding-bottom"]]],[["pt",["padding-top"]],["pr",["padding-right"]],["pb",["padding-bottom"]],["pl",["padding-left"]]]],
+    "width": [["w",["width"]]],
+    "inset": [["inset",["top","right","bottom","left"]],[["inset-x",["left","right"]],["inset-y",["top","bottom"]]],[["top",["top"]],["right",["right"]],["bottom",["bottom"]],["left",["left"]]]]
+  }
 }

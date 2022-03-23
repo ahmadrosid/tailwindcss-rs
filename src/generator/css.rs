@@ -1,5 +1,4 @@
 use crate::config::Config;
-use crate::generator::generate_variant;
 
 use std::fs::File;
 use std::io::{BufWriter, Write};
@@ -39,56 +38,6 @@ impl Css {
         let size = line.split('-').last().unwrap();
         if let Some(font_size) = self.config.get_font_weight(size) {
             let css = &format!(".font-{} {{\n\tfont-size: {};\n}}", size, font_size);
-            self.append_css(css);
-        }
-    }
-
-    pub fn generate_padding(&mut self, prefix: &str, line: &str) {
-        let mut variant = line.split('-').last().unwrap().to_string();
-        let mut value = String::new();
-        if let Some(size) = self.config.get_spacing(&variant) {
-            value.push_str(size);
-        } else {
-            return;
-        }
-
-        variant = variant.replace(".", "\\.");
-        if let Some(css) = generate_variant(prefix, &variant, &value) {
-            self.append_css(&css);
-        }
-    }
-
-    pub fn generate_margin(&mut self, prefix: &str, line: &str) {
-        let mut variant = line.split('-').last().unwrap().to_string();
-        let mut value = String::new();
-        if let Some(size) = self.config.get_margin(&variant) {
-            value.push_str(size);
-        } else {
-            return;
-        }
-
-        variant = variant.replace(".", "\\.");
-        if let Some(css) = generate_variant(prefix, &variant, &value) {
-            self.append_css(&css);
-        }
-    }
-
-    pub fn generate_width(&mut self, prefix: &str, line: &str) {
-        let mut space = line.split('-').last().unwrap().to_string();
-        let mut space_size = String::new();
-        if let Some(size) = self.config.get_spacing(&space.to_string()) {
-            space_size.push_str(size);
-        } else if let Some(size) = self.config.get_width(&space) {
-            space_size.push_str(size);
-        }
-
-        if space_size.is_empty() {
-            return;
-        }
-
-        space = space.replace(".", "\\.").replace("/", "\\/");
-        if prefix == "w" {
-            let css = &format!(".w-{} {{\n\twidth: {};\n}}", space, space_size);
             self.append_css(css);
         }
     }
@@ -202,30 +151,33 @@ impl Css {
             }
         }
 
-        let plugin_properties = vec![&self.config.inset];
-
         let key = line.split("-").collect::<Vec<_>>();
         let key_len = key.len();
-        let is_negative = key_len == 3 && key[0] == "";
+        let is_negative = key_len >= 3 && key[0] == "";
         let name = match key_len {
             2 => key[0].to_string(),
             3 => {
                 if is_negative {
-                    key[1].to_string()
+                    format!("-{}", key[1])
                 } else {
                     format!("{}-{}", key[0], key[1])
+                }
+            }
+            4 => {
+                if is_negative {
+                    format!("-{}-{}", key[1], key[2])
+                } else {
+                    line.to_string()
                 }
             }
             _ => line.to_string(),
         };
 
-        for plugin in plugin_properties {
-            if let Some(css_properties) = self.config.get_plugin_value(
-                plugin, 
-                &name, 
-                key.last()?,
-                is_negative,
-            ) {
+        for plugin in &self.config.plugins {
+            if let Some(css_properties) =
+                self.config
+                    .get_plugin_value(plugin, &name, key.last()?, is_negative)
+            {
                 let css = &format!(".{} {{\n{}}}", &line.replace(".", "\\."), css_properties);
                 self.append_css(css);
                 return Some(());

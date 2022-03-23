@@ -30,7 +30,7 @@ pub struct Config {
     pub overflow: Map<String, Value>,
     pub overscroll_behavior: Map<String, Value>,
     pub position: Map<String, Value>,
-    pub inset: PluginValue,
+    pub plugins: Vec<PluginValue>,
 }
 
 impl Config {
@@ -49,11 +49,12 @@ impl Config {
         data: &Map<String, Value>,
         data_key: &str,
         key_val: &str,
-        is_negative: bool
+        is_negative: bool,
     ) -> Option<String> {
         let item = data.get(data_key)?;
         let properties = item.as_array()?;
         let margin = self.get_margin(key_val)?;
+
         let value = if is_negative {
             format!("-{}", margin)
         } else {

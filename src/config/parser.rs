@@ -4,6 +4,7 @@ use serde_json::{Map, Value};
 use std::collections::HashMap;
 
 use super::plugin::create_utility_plugin;
+use super::plugin::PluginMode;
 
 pub fn parse(source: &str) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(source)?;
@@ -34,7 +35,12 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         overflow: extract_object(&obj, "overflow"),
         overscroll_behavior: extract_object(&obj, "overscroll-behavior"),
         position: extract_object(&obj, "position"),
-        inset: create_utility_plugin("inset", &obj).unwrap_or_default(),
+        plugins: vec![
+            create_utility_plugin("margin", &obj, PluginMode::WithNegative).unwrap_or_default(),
+            create_utility_plugin("padding", &obj, PluginMode::OnlyPositive).unwrap_or_default(),
+            create_utility_plugin("width", &obj, PluginMode::OnlyPositive).unwrap_or_default(),
+            create_utility_plugin("inset", &obj, PluginMode::WithNegative).unwrap_or_default(),
+        ],
     };
 
     Ok(config)
