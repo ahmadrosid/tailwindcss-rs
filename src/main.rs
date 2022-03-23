@@ -5,11 +5,11 @@ mod generator;
 mod html;
 
 use clap::Parser;
+use log::{info, warn};
 use notify::{DebouncedEvent, RecommendedWatcher, RecursiveMode, Watcher};
 use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
-use log::{info, warn};
 
 fn watch(source: &str, output: &str, should_watch: &bool) -> notify::Result<()> {
     let config_source = include_str!("default-config.json");
@@ -21,11 +21,11 @@ fn watch(source: &str, output: &str, should_watch: &bool) -> notify::Result<()> 
     if !should_watch {
         std::process::exit(0);
     }
-    
+
     let (tx, rx) = channel();
     let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_millis(500))?;
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
-    
+
     info!("Start watching file: {}!", &source);
 
     loop {
@@ -74,7 +74,7 @@ fn main() {
 
     let args = Application::parse();
 
-    if let Err(e) = watch(&args.input, &args.output,  &args.watch) {
+    if let Err(e) = watch(&args.input, &args.output, &args.watch) {
         warn!("error: {:?}", e);
         std::process::exit(1);
     }

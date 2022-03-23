@@ -22,9 +22,13 @@ impl Css {
     }
 
     pub fn push(&mut self, class: &str) {
-        class.to_owned().split_whitespace().into_iter().for_each(|val| {
-            self.source.insert(val.to_string());
-        });
+        class
+            .to_owned()
+            .split_whitespace()
+            .into_iter()
+            .for_each(|val| {
+                self.source.insert(val.to_string());
+            });
     }
 }
 

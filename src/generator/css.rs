@@ -198,10 +198,40 @@ impl Css {
             if let Some((attribute, value)) = Config::get_obj(&plugin, &key) {
                 let css = &format!("{} {{\n\t{}: {};\n}}", &key, attribute, value);
                 self.append_css(css);
-                return Some(())
+                return Some(());
             }
         }
 
-        return None
+        let plugin_properties = vec![&self.config.inset];
+
+        let key = line.split("-").collect::<Vec<_>>();
+        let key_len = key.len();
+        let is_negative = key_len == 3 && key[0] == "";
+        let name = match key_len {
+            2 => key[0].to_string(),
+            3 => {
+                if is_negative {
+                    key[1].to_string()
+                } else {
+                    format!("{}-{}", key[0], key[1])
+                }
+            }
+            _ => line.to_string(),
+        };
+
+        for plugin in plugin_properties {
+            if let Some(css_properties) = self.config.get_plugin_value(
+                plugin, 
+                &name, 
+                key.last()?,
+                is_negative,
+            ) {
+                let css = &format!(".{} {{\n{}}}", &line.replace(".", "\\."), css_properties);
+                self.append_css(css);
+                return Some(());
+            }
+        }
+
+        return None;
     }
 }

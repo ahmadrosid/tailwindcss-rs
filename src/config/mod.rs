@@ -1,6 +1,7 @@
-mod parser;
 mod config;
+mod parser;
+mod plugin;
 
-pub use parser::parse;
 pub use config::Config;
 pub use config::FontSize;
+pub use parser::parse;
