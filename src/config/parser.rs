@@ -3,7 +3,7 @@ use crate::config::FontSize;
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
-use super::plugin::create_utility_plugin;
+use super::plugin::create_utility;
 use super::plugin::PluginMode;
 
 pub fn parse(source: &str) -> serde_json::Result<Config> {
@@ -23,6 +23,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         color: obj.get("color").unwrap().as_object().unwrap().clone(),
         aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
         width: extract_hash_map(&obj, "width"),
+        height: extract_hash_map(&obj, "height"),
         columns: extract_hash_map(&obj, "columns"),
         margin: extract_hash_map(&obj, "margin"),
         box_decoration_break: extract_object(&obj, "box-decoration-break"),
@@ -36,10 +37,11 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         overscroll_behavior: extract_object(&obj, "overscroll-behavior"),
         position: extract_object(&obj, "position"),
         plugins: vec![
-            create_utility_plugin("margin", &obj, PluginMode::WithNegative).unwrap_or_default(),
-            create_utility_plugin("padding", &obj, PluginMode::OnlyPositive).unwrap_or_default(),
-            create_utility_plugin("width", &obj, PluginMode::OnlyPositive).unwrap_or_default(),
-            create_utility_plugin("inset", &obj, PluginMode::WithNegative).unwrap_or_default(),
+            create_utility("margin", &obj, &PluginMode::WithNegative).unwrap_or_default(),
+            create_utility("padding", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
+            create_utility("width", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
+            create_utility("height", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
+            create_utility("inset", &obj, &PluginMode::WithNegative).unwrap_or_default(),
         ],
     };
 

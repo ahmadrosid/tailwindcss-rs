@@ -11,7 +11,7 @@ use std::path::Path;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-fn watch(source: &str, output: &str, should_watch: &bool) -> notify::Result<()> {
+fn watch(source: &str, output: &str, should_watch: bool) -> notify::Result<()> {
     let config_source = include_str!("default-config.json");
     let config = config::parse(config_source).unwrap();
     let css = html::parse(Path::new(&source)).unwrap();
@@ -74,7 +74,7 @@ fn main() {
 
     let args = Application::parse();
 
-    if let Err(e) = watch(&args.input, &args.output, &args.watch) {
+    if let Err(e) = watch(&args.input, &args.output, args.watch) {
         warn!("error: {:?}", e);
         std::process::exit(1);
     }

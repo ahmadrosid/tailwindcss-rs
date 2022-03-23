@@ -1,4 +1,4 @@
-use super::plugin::PluginValue;
+use super::plugin::Utility;
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
@@ -16,6 +16,7 @@ pub struct Config {
     pub line_height: HashMap<String, String>,
     pub aspect_ratio: HashMap<String, String>,
     pub width: HashMap<String, String>,
+    pub height: HashMap<String, String>,
     pub columns: HashMap<String, String>,
     pub margin: HashMap<String, String>,
     pub box_decoration_break: Map<String, Value>,
@@ -30,7 +31,7 @@ pub struct Config {
     pub overflow: Map<String, Value>,
     pub overscroll_behavior: Map<String, Value>,
     pub position: Map<String, Value>,
-    pub plugins: Vec<PluginValue>,
+    pub plugins: Vec<Utility>,
 }
 
 impl Config {
@@ -57,7 +58,10 @@ impl Config {
 
         // TODO: clean up
         if variant.is_none() && data_key == "w" {
-            variant = self.get_width(key_val);
+            variant = self.width.get(key_val);
+        }
+        if variant.is_none() && data_key == "h" {
+            variant = self.height.get(key_val);
         }
 
         let value = if is_negative {
@@ -96,10 +100,6 @@ impl Config {
 
     pub fn get_break_point(&self, key: &str) -> Option<&Value> {
         self.break_point.get(key)
-    }
-
-    pub fn get_width(&self, key: &str) -> Option<&String> {
-        self.width.get(key)
     }
 
     pub fn get_box_decoration_break(&self, key: &str) -> Option<&Value> {
