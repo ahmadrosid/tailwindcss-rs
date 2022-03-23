@@ -10,6 +10,7 @@
   "height": {"auto":"auto","1/2":"50%","1/3":"33.333333%","2/3":"66.666667%","1/4":"25%","2/4":"50%","3/4":"75%","1/5":"20%","2/5":"40%","3/5":"60%","4/5":"80%","1/6":"16.666667%","2/6":"33.333333%","3/6":"50%","4/6":"66.666667%","5/6":"83.333333%","full":"100%","screen":"100vh","min":"min-content","max":"max-content","fit":"fit-content"},
   "columns": {"1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9","10":"10","11":"11","12":"12","auto":"auto","3xs":"16rem","2xs":"18rem","xs":"20rem","sm":"24rem","md":"28rem","lg":"32rem","xl":"36rem","2xl":"42rem","3xl":"48rem","4xl":"56rem","5xl":"64rem","6xl":"72rem","7xl":"80rem"},
   "screens": {"sm":"640px","md":"768px","lg":"1024px","xl":"1280px","2xl":"1536px"},
+  "z_index": {"0":"0","10":"10","20":"20","30":"30","40":"40","50":"50","auto":"auto"},
   "break-before": {".break-before-auto":{"break-before":"auto"},".break-before-avoid":{"break-before":"avoid"},".break-before-all":{"break-before":"all"},".break-before-avoid-page":{"break-before":"avoid-page"},".break-before-page":{"break-before":"page"},".break-before-left":{"break-before":"left"},".break-before-right":{"break-before":"right"},".break-before-column":{"break-before":"column"}},
   "break-after": {".break-after-auto":{"break-after":"auto"},".break-after-avoid":{"break-after":"avoid"},".break-after-all":{"break-after":"all"},".break-after-avoid-page":{"break-after":"avoid-page"},".break-after-page":{"break-after":"page"},".break-after-left":{"break-after":"left"},".break-after-right":{"break-after":"right"},".break-after-column":{"break-after":"column"}},
   "break-inside": {".break-inside-auto":{"break-inside":"auto"},".break-inside-avoid":{"break-inside":"avoid"},".break-inside-avoid-page":{"break-inside":"avoid-page"},".break-inside-avoid-column":{"break-inside":"avoid-column"}},
@@ -29,6 +30,7 @@
     "padding": [["p",["padding"]],[["px",["padding-left","padding-right"]],["py",["padding-top","padding-bottom"]]],[["pt",["padding-top"]],["pr",["padding-right"]],["pb",["padding-bottom"]],["pl",["padding-left"]]]],
     "width": [["w",["width"]]],
     "height": [["h",["height"]]],
+    "z_index": [["z",["z-index"]]],
     "inset": [["inset",["top","right","bottom","left"]],[["inset-x",["left","right"]],["inset-y",["top","bottom"]]],[["top",["top"]],["right",["right"]],["bottom",["bottom"]],["left",["left"]]]]
   }
 }

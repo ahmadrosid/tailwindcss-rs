@@ -17,6 +17,7 @@ pub struct Config {
     pub aspect_ratio: HashMap<String, String>,
     pub width: HashMap<String, String>,
     pub height: HashMap<String, String>,
+    pub z_index: HashMap<String, String>,
     pub columns: HashMap<String, String>,
     pub margin: HashMap<String, String>,
     pub box_decoration_break: Map<String, Value>,
@@ -62,6 +63,9 @@ impl Config {
         }
         if variant.is_none() && data_key == "h" {
             variant = self.height.get(key_val);
+        }
+        if variant.is_none() && data_key == "z" {
+            variant = self.z_index.get(key_val);
         }
 
         let value = if is_negative {

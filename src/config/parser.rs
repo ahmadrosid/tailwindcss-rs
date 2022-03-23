@@ -24,6 +24,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
         width: extract_hash_map(&obj, "width"),
         height: extract_hash_map(&obj, "height"),
+        z_index: extract_hash_map(&obj, "z_index"),
         columns: extract_hash_map(&obj, "columns"),
         margin: extract_hash_map(&obj, "margin"),
         box_decoration_break: extract_object(&obj, "box-decoration-break"),
@@ -42,6 +43,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
             create_utility("width", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
             create_utility("height", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
             create_utility("inset", &obj, &PluginMode::WithNegative).unwrap_or_default(),
+            create_utility("z_index", &obj, &PluginMode::WithNegative).unwrap_or_default(),
         ],
     };
 
