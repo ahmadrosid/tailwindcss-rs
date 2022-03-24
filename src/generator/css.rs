@@ -140,6 +140,8 @@ impl Css {
             &self.config.overflow,
             &self.config.overscroll_behavior,
             &self.config.position,
+            // TODO: Clean up
+            &self.config.base.get("flex-direction").unwrap(),
         ];
 
         for plugin in plugins {

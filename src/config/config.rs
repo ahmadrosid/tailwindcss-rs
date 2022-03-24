@@ -52,8 +52,8 @@ impl Config {
     ) -> Option<String> {
         let item = data.get(data_key)?;
         let properties = item.as_array()?;
-        let margin = self.spacing.get(key_val);
 
+        // TODO: clean up
         let name = match data_key {
             "w" => "width",
             "h" => "height",
@@ -62,11 +62,9 @@ impl Config {
             _ => data_key
         };
 
-        // TODO: clean up remove match for "w" | "h" | "z"
-        let variant: Option<&str> = if margin.is_none() {
-            self.base.get(name)?.get(key_val)?.as_str()
-        } else {
-            margin?.as_str()
+        let variant: Option<&str> = match self.spacing.get(key_val) {
+            Some(val) => val.as_str(),
+            None => self.base.get(name)?.get(key_val)?.as_str()
         };
 
         let value = if is_negative {

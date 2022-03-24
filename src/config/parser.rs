@@ -19,34 +19,36 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
     let mut base = HashMap::new();
 
     base.insert("basis".into(), {
-        let mut basis = extract_object(&obj, "basis");
-        basis.append(&mut spacing.clone());
-        basis
+        let mut data = extract_object(&obj, "data");
+        data.append(&mut spacing.clone());
+        data
     });
 
     base.insert("margin".into(), {
-        let mut basis = extract_object(&obj, "margin");
-        basis.append(&mut spacing.clone());
-        basis
+        let mut data = extract_object(&obj, "margin");
+        data.append(&mut spacing.clone());
+        data
     });
 
     base.insert("z_index".into(), {
-        let mut basis = extract_object(&obj, "z_index");
-        basis.append(&mut spacing.clone());
-        basis
+        let mut data = extract_object(&obj, "z_index");
+        data.append(&mut spacing.clone());
+        data
     });
 
     base.insert("width".into(), {
-        let mut basis = extract_object(&obj, "width");
-        basis.append(&mut spacing.clone());
-        basis
+        let mut data = extract_object(&obj, "width");
+        data.append(&mut spacing.clone());
+        data
     });
 
     base.insert("height".into(), {
-        let mut basis = extract_object(&obj, "height");
-        basis.append(&mut spacing.clone());
-        basis
+        let mut data = extract_object(&obj, "height");
+        data.append(&mut spacing.clone());
+        data
     });
+
+    base.insert("flex-direction".into(),  extract_object(&obj, "flex-direction"));
 
     let config = Config {
         base,
@@ -55,7 +57,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         spacing,
         font_weight: extract_hash_map(&obj, "font_weight"),
         line_height: extract_hash_map(&obj, "lineHeight"),
-        color: obj.get("color").unwrap().as_object().unwrap().clone(),
+        color: extract_object(&obj, "color"),
         aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
         columns: extract_hash_map(&obj, "columns"),
         box_decoration_break: extract_object(&obj, "box-decoration-break"),
