@@ -12,12 +12,12 @@ use std::sync::mpsc::channel;
 use std::time::Duration;
 
 fn watch(source: &str, output: &str, should_watch: bool) -> notify::Result<()> {
-    let config_source = include_str!("default-config.json");
-    let config = config::parse(config_source).unwrap();
+    let default = include_str!("default-config.json");
+    let config = config::parse(default).unwrap();
     let css = html::parse(Path::new(&source)).unwrap();
     generator::execute(&css, output, &config);
 
-    info!("CSS generated: {}!", output);
+    info!("CSS generated: {}", output);
     if !should_watch {
         std::process::exit(0);
     }
@@ -26,7 +26,7 @@ fn watch(source: &str, output: &str, should_watch: bool) -> notify::Result<()> {
     let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_millis(500))?;
     watcher.watch(Path::new(&source), RecursiveMode::NonRecursive)?;
 
-    info!("Start watching file: {}!", &source);
+    info!("Start watching file: {}", &source);
 
     loop {
         let event = match rx.recv() {
@@ -44,7 +44,7 @@ fn watch(source: &str, output: &str, should_watch: bool) -> notify::Result<()> {
             | DebouncedEvent::Chmod(path) => {
                 let css = html::parse(&path).unwrap();
                 generator::execute(&css, output, &config);
-                info!("CSS {} updated!", output);
+                info!("CSS {} updated", output);
             }
             _ => (),
         }
