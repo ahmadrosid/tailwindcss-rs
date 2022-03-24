@@ -12,14 +12,15 @@ pub struct FontSize {
 pub struct Config {
     pub font_size: HashMap<String, FontSize>,
     pub font_weight: HashMap<String, String>,
-    pub spacing: HashMap<String, String>,
+    pub base: HashMap<String, Map<String, Value>>,
+    pub spacing: Map<String, Value>,
     pub line_height: HashMap<String, String>,
     pub aspect_ratio: HashMap<String, String>,
-    pub width: HashMap<String, String>,
-    pub height: HashMap<String, String>,
-    pub z_index: HashMap<String, String>,
+    pub width: Map<String, Value>,
+    pub height: Map<String, Value>,
+    pub z_index: Map<String, Value>,
     pub columns: HashMap<String, String>,
-    pub margin: HashMap<String, String>,
+    pub margin: Map<String, Value>,
     pub box_decoration_break: Map<String, Value>,
     pub box_sizing: Map<String, Value>,
     pub break_point: Map<String, Value>,
@@ -55,24 +56,29 @@ impl Config {
     ) -> Option<String> {
         let item = data.get(data_key)?;
         let properties = item.as_array()?;
-        let mut variant = self.get_margin(key_val);
+        let margin = self.get_margin(key_val);
 
         // TODO: clean up
-        if variant.is_none() && data_key == "w" {
-            variant = self.width.get(key_val);
-        }
-        if variant.is_none() && data_key == "h" {
-            variant = self.height.get(key_val);
-        }
-        if variant.is_none() && data_key == "z" {
-            variant = self.z_index.get(key_val);
-        }
+        let variant: Option<&str> = if margin.is_none() {
+            let res = match data_key {
+                "w" => self.width.get(key_val)?.as_str(),
+                "h" => self.height.get(key_val)?.as_str(),
+                "z" => self.z_index.get(key_val)?.as_str(),
+                "basis" => self.base.get("basis")?.get(key_val)?.as_str(),
+                _ => None
+            };
+            res
+        } else {
+            margin
+        };
+        println!("{:?}", variant);
 
         let value = if is_negative {
             format!("-{}", variant?)
         } else {
             variant?.to_string()
         };
+
 
         let mut css_properties_value = String::new();
         for prop in properties {
@@ -114,12 +120,12 @@ impl Config {
         self.color.get(key)?.as_object()
     }
 
-    pub fn get_margin(&self, key: &str) -> Option<&String> {
+    pub fn get_margin(&self, key: &str) -> Option<&str> {
         let margin = self.spacing.get(key);
         if margin.is_none() {
-            return self.margin.get(key);
+            return self.margin.get(key)?.as_str();
         }
-        margin
+        margin?.as_str()
     }
 
     pub fn get_color_str(&self, key: &str) -> Option<&str> {

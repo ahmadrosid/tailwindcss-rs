@@ -14,19 +14,28 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
     break_point.extend(extract_object(&obj, "break-after"));
     break_point.extend(extract_object(&obj, "break-inside"));
 
+    let spacing = extract_object(&obj, "spacing");
+
+    let mut base = HashMap::new();
+    let mut basis = extract_object(&obj, "basis");
+    basis.append(&mut spacing.clone());
+
+    base.insert("basis".into(), basis);
+
     let config = Config {
+        base,
         font_size,
         break_point,
+        spacing,
         font_weight: extract_hash_map(&obj, "font_weight"),
-        spacing: extract_hash_map(&obj, "spacing"),
         line_height: extract_hash_map(&obj, "lineHeight"),
         color: obj.get("color").unwrap().as_object().unwrap().clone(),
         aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
-        width: extract_hash_map(&obj, "width"),
-        height: extract_hash_map(&obj, "height"),
-        z_index: extract_hash_map(&obj, "z_index"),
+        width: extract_object(&obj, "width"),
+        height: extract_object(&obj, "height"),
+        z_index: extract_object(&obj, "z_index"),
         columns: extract_hash_map(&obj, "columns"),
-        margin: extract_hash_map(&obj, "margin"),
+        margin: extract_object(&obj, "margin"),
         box_decoration_break: extract_object(&obj, "box-decoration-break"),
         box_sizing: extract_object(&obj, "box-sizing"),
         display: extract_object(&obj, "display"),
@@ -44,6 +53,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
             create_utility("height", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
             create_utility("inset", &obj, &PluginMode::WithNegative).unwrap_or_default(),
             create_utility("z_index", &obj, &PluginMode::WithNegative).unwrap_or_default(),
+            create_utility("basis", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
         ],
     };
 
