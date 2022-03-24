@@ -1,4 +1,4 @@
-use super::ConfigValue;
+use super::Object;
 use super::extract_object;
 use std::collections::HashMap;
 use serde_json::Map;
@@ -9,20 +9,21 @@ use serde_json::Value;
 // css: .inset-0 { top: 0px; right: 0px; bottom: 0px; left: 0px; }
 pub type Utility = Map<String, Value>;
 
-pub enum PluginMode {
+#[derive(Clone, Copy)]
+pub enum Mode {
     WithNegative,
     OnlyPositive,
 }
 
-fn build_value(data: &mut Utility, item: &Value, mode: &PluginMode) -> Option<()> {
+fn build_value(data: &mut Utility, item: &Value, mode: Mode) -> Option<()> {
     let key = item.get(0)?.as_str()?.to_string();
     let variants = item.get(1)?.clone();
     match mode {
-        PluginMode::WithNegative => {
+        Mode::WithNegative => {
             data.insert(key.to_string(), variants.clone());
             data.insert(format!("-{}", &key), variants);
         }
-        PluginMode::OnlyPositive => {
+        Mode::OnlyPositive => {
             data.insert(key, variants);
         }
     }
@@ -32,7 +33,7 @@ fn build_value(data: &mut Utility, item: &Value, mode: &PluginMode) -> Option<()
 pub fn create_utility<'a>(
     name: &'a str,
     obj: &'a Map<String, Value>,
-    mode: PluginMode,
+    mode: Mode,
 ) -> Option<Utility> {
     let plugin = obj.get("plugins")?.as_object()?;
     let arr = plugin.get(name)?.as_array()?;
@@ -40,21 +41,21 @@ pub fn create_utility<'a>(
 
     for item in arr {
         if item.get(0)?.is_string() {
-            build_value(&mut data, item, &mode);
+            build_value(&mut data, item, mode);
             continue;
         }
 
         for deep_item in item.as_array()? {
-            build_value(&mut data, deep_item, &mode);
+            build_value(&mut data, deep_item, mode);
         }
     }
 
     Some(data)
 }
 
-pub fn extract_base(obj: &'_ Map<String, Value>) -> (ConfigValue, Map<String, Value>) {
+pub fn extract_base(obj: &'_ Map<String, Value>) -> (Object, Map<String, Value>) {
     let spacing = extract_object(obj, "spacing");
-    let mut base: ConfigValue = HashMap::new();
+    let mut base: Object = HashMap::new();
 
     base.insert("basis".into(), {
         let mut data = extract_object(obj, "data");

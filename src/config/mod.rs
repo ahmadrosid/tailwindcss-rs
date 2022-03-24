@@ -11,8 +11,7 @@ pub use parser::parse;
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
-#[allow(clippy::module_inception)]
-pub type ConfigValue = HashMap<String, Map<String, Value>>;
+pub type Object = HashMap<String, Map<String, Value>>;
 
 pub fn extract_object(obj: &Map<String, Value>, key: &str) -> Map<String, Value> {
     if obj.get(key).is_none() || obj.get(key).unwrap().as_object().is_none() {

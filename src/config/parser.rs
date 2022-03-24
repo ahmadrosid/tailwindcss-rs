@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 use super::extract_object;
 use super::plugin::create_utility;
-use super::plugin::PluginMode::{OnlyPositive, WithNegative};
+use super::plugin::Mode::{OnlyPositive, WithNegative};
 use super::plugin;
 use super::utility;
 

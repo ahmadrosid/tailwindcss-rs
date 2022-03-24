@@ -2,9 +2,9 @@ use std::collections::HashMap;
 
 use serde_json::{Map, Value};
 
-use super::{extract_object, ConfigValue};
+use super::{extract_object, Object};
 
-pub fn extract(obj: &'_ Map<String, Value>) -> ConfigValue {
+pub fn extract(obj: &'_ Map<String, Value>) -> Object {
     let mut utility: HashMap<String, Map<String, Value>> = HashMap::new();
     utility.insert("flex-direction".into(), extract_object(obj, "flex-direction"));
     utility.insert("display".into(), extract_object(obj, "display"));

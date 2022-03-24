@@ -1,4 +1,4 @@
-use super::{plugin::Utility, ConfigValue};
+use super::{plugin::Utility, Object};
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
@@ -12,8 +12,8 @@ pub struct FontSize {
 pub struct Config {
     pub font_size: HashMap<String, FontSize>,
     pub font_weight: HashMap<String, String>,
-    pub base: ConfigValue,
-    pub utility: ConfigValue,
+    pub base: Object,
+    pub utility: Object,
     pub spacing: Map<String, Value>,
     pub line_height: HashMap<String, String>,
     pub aspect_ratio: HashMap<String, String>,
