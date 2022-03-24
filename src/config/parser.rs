@@ -17,10 +17,36 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
     let spacing = extract_object(&obj, "spacing");
 
     let mut base = HashMap::new();
-    let mut basis = extract_object(&obj, "basis");
-    basis.append(&mut spacing.clone());
 
-    base.insert("basis".into(), basis);
+    base.insert("basis".into(), {
+        let mut basis = extract_object(&obj, "basis");
+        basis.append(&mut spacing.clone());
+        basis
+    });
+
+    base.insert("margin".into(), {
+        let mut basis = extract_object(&obj, "margin");
+        basis.append(&mut spacing.clone());
+        basis
+    });
+
+    base.insert("z_index".into(), {
+        let mut basis = extract_object(&obj, "z_index");
+        basis.append(&mut spacing.clone());
+        basis
+    });
+
+    base.insert("width".into(), {
+        let mut basis = extract_object(&obj, "width");
+        basis.append(&mut spacing.clone());
+        basis
+    });
+
+    base.insert("height".into(), {
+        let mut basis = extract_object(&obj, "height");
+        basis.append(&mut spacing.clone());
+        basis
+    });
 
     let config = Config {
         base,
@@ -31,11 +57,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         line_height: extract_hash_map(&obj, "lineHeight"),
         color: obj.get("color").unwrap().as_object().unwrap().clone(),
         aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
-        width: extract_object(&obj, "width"),
-        height: extract_object(&obj, "height"),
-        z_index: extract_object(&obj, "z_index"),
         columns: extract_hash_map(&obj, "columns"),
-        margin: extract_object(&obj, "margin"),
         box_decoration_break: extract_object(&obj, "box-decoration-break"),
         box_sizing: extract_object(&obj, "box-sizing"),
         display: extract_object(&obj, "display"),

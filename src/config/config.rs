@@ -16,11 +16,7 @@ pub struct Config {
     pub spacing: Map<String, Value>,
     pub line_height: HashMap<String, String>,
     pub aspect_ratio: HashMap<String, String>,
-    pub width: Map<String, Value>,
-    pub height: Map<String, Value>,
-    pub z_index: Map<String, Value>,
     pub columns: HashMap<String, String>,
-    pub margin: Map<String, Value>,
     pub box_decoration_break: Map<String, Value>,
     pub box_sizing: Map<String, Value>,
     pub break_point: Map<String, Value>,
@@ -56,19 +52,21 @@ impl Config {
     ) -> Option<String> {
         let item = data.get(data_key)?;
         let properties = item.as_array()?;
-        let margin = self.get_margin(key_val);
+        let margin = self.spacing.get(key_val);
 
-        // TODO: clean up
+        let name = match data_key {
+            "w" => "width",
+            "h" => "height",
+            "z" => "z_index",
+            "m" | "mx" | "my" | "ml" | "mr" | "mt" | "mb" => "margin",
+            _ => data_key
+        };
+
+        // TODO: clean up remove match for "w" | "h" | "z"
         let variant: Option<&str> = if margin.is_none() {
-            let res = match data_key {
-                "w" => self.width.get(key_val)?.as_str(),
-                "h" => self.height.get(key_val)?.as_str(),
-                "z" => self.z_index.get(key_val)?.as_str(),
-                _ => self.base.get(data_key)?.get(key_val)?.as_str()
-            };
-            res
+            self.base.get(name)?.get(key_val)?.as_str()
         } else {
-            margin
+            margin?.as_str()
         };
 
         let value = if is_negative {
@@ -76,7 +74,6 @@ impl Config {
         } else {
             variant?.to_string()
         };
-
 
         let mut css_properties_value = String::new();
         for prop in properties {
@@ -116,14 +113,6 @@ impl Config {
 
     pub fn get_color_map(&self, key: &str) -> Option<&Map<String, Value>> {
         self.color.get(key)?.as_object()
-    }
-
-    pub fn get_margin(&self, key: &str) -> Option<&str> {
-        let margin = self.spacing.get(key);
-        if margin.is_none() {
-            return self.margin.get(key)?.as_str();
-        }
-        margin?.as_str()
     }
 
     pub fn get_color_str(&self, key: &str) -> Option<&str> {
