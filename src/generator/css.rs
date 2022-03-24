@@ -130,7 +130,7 @@ impl Css {
     //     }
     // }
 
-    pub fn get_key_name(&self, line: &str) -> (String, String, bool) {
+    pub fn get_key_name(line: &str) -> (String, String, bool) {
         let key = line.split('-').collect::<Vec<_>>();
         let key_len = key.len();
         let is_negative = key_len >= 3 && key[0].is_empty();
@@ -153,12 +153,13 @@ impl Css {
             _ => line.to_string(),
         };
 
-        (key.last().unwrap().to_string(), name, is_negative)
+        let key_val = *key.last().unwrap();
+        (key_val.to_string(), name, is_negative)
     }
 
     pub fn generate_plugin(&mut self, line: &str) -> Option<()> {
         let key = format!(".{}", line);
-        for (_, plugin) in self.config.utility.iter() {
+        for plugin in self.config.utility.values() {
             if let Some((attribute, value)) = Config::get_obj(plugin, &key) {
                 let css = &format!("{} {{\n\t{}: {};\n}}", &key, attribute, value);
                 self.append_css(css);
@@ -166,7 +167,7 @@ impl Css {
             }
         }
 
-        let (key, name, is_negative) = self.get_key_name(line);
+        let (key, name, is_negative) = Self::get_key_name(line);
         for plugin in &self.config.plugins {
             if let Some(css_properties) =
                 self.config

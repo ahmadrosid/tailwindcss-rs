@@ -6,8 +6,8 @@ use std::collections::HashMap;
 use super::extract_object;
 use super::plugin::create_utility;
 use super::plugin::PluginMode::{OnlyPositive, WithNegative};
-use super::plugin::extract_base;
-use super::utility::extract_utility;
+use super::plugin;
+use super::utility;
 
 pub fn parse(source: &str) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(source)?;
@@ -17,14 +17,14 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
     break_point.extend(extract_object(&obj, "break-after"));
     break_point.extend(extract_object(&obj, "break-inside"));
 
-    let (base, spacing) = extract_base(&obj);
+    let (base, spacing) = plugin::extract_base(&obj);
 
     let config = Config {
         base,
         font_size,
         break_point,
         spacing,
-        utility: extract_utility(&obj),
+        utility: utility::extract(&obj),
         font_weight: extract_hash_map(&obj, "font_weight"),
         line_height: extract_hash_map(&obj, "lineHeight"),
         color: extract_object(&obj, "color"),
