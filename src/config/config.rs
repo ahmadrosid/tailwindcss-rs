@@ -64,14 +64,12 @@ impl Config {
                 "w" => self.width.get(key_val)?.as_str(),
                 "h" => self.height.get(key_val)?.as_str(),
                 "z" => self.z_index.get(key_val)?.as_str(),
-                "basis" => self.base.get("basis")?.get(key_val)?.as_str(),
-                _ => None
+                _ => self.base.get(data_key)?.get(key_val)?.as_str()
             };
             res
         } else {
             margin
         };
-        println!("{:?}", variant);
 
         let value = if is_negative {
             format!("-{}", variant?)

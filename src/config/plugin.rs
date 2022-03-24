@@ -29,7 +29,7 @@ fn build_value(data: &mut Utility, item: &Value, mode: &PluginMode) -> Option<()
 pub fn create_utility<'a>(
     name: &'a str,
     obj: &'a Map<String, Value>,
-    mode: &PluginMode,
+    mode: PluginMode,
 ) -> Option<Utility> {
     let plugin = obj.get("plugins")?.as_object()?;
     let arr = plugin.get(name)?.as_array()?;
@@ -37,12 +37,12 @@ pub fn create_utility<'a>(
 
     for item in arr {
         if item.get(0)?.is_string() {
-            build_value(&mut data, item, mode);
+            build_value(&mut data, item, &mode);
             continue;
         }
 
         for deep_item in item.as_array()? {
-            build_value(&mut data, deep_item, mode);
+            build_value(&mut data, deep_item, &mode);
         }
     }
 

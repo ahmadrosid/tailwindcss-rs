@@ -4,7 +4,7 @@ use serde_json::{Map, Value};
 use std::collections::HashMap;
 
 use super::plugin::create_utility;
-use super::plugin::PluginMode;
+use super::plugin::PluginMode::{OnlyPositive, WithNegative};
 
 pub fn parse(source: &str) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(source)?;
@@ -47,13 +47,13 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         overscroll_behavior: extract_object(&obj, "overscroll-behavior"),
         position: extract_object(&obj, "position"),
         plugins: vec![
-            create_utility("margin", &obj, &PluginMode::WithNegative).unwrap_or_default(),
-            create_utility("padding", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
-            create_utility("width", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
-            create_utility("height", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
-            create_utility("inset", &obj, &PluginMode::WithNegative).unwrap_or_default(),
-            create_utility("z_index", &obj, &PluginMode::WithNegative).unwrap_or_default(),
-            create_utility("basis", &obj, &PluginMode::OnlyPositive).unwrap_or_default(),
+            create_utility("margin", &obj, WithNegative).unwrap_or_default(),
+            create_utility("padding", &obj, OnlyPositive).unwrap_or_default(),
+            create_utility("width", &obj, OnlyPositive).unwrap_or_default(),
+            create_utility("height", &obj, OnlyPositive).unwrap_or_default(),
+            create_utility("inset", &obj, WithNegative).unwrap_or_default(),
+            create_utility("z_index", &obj, WithNegative).unwrap_or_default(),
+            create_utility("basis", &obj, OnlyPositive).unwrap_or_default(),
         ],
     };
 
