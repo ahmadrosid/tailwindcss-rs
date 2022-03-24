@@ -3,8 +3,11 @@ use crate::config::FontSize;
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
+use super::extract_object;
 use super::plugin::create_utility;
 use super::plugin::PluginMode::{OnlyPositive, WithNegative};
+use super::plugin::extract_base;
+use super::utility::extract_utility;
 
 pub fn parse(source: &str) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(source)?;
@@ -14,62 +17,19 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
     break_point.extend(extract_object(&obj, "break-after"));
     break_point.extend(extract_object(&obj, "break-inside"));
 
-    let spacing = extract_object(&obj, "spacing");
-
-    let mut base = HashMap::new();
-
-    base.insert("basis".into(), {
-        let mut data = extract_object(&obj, "data");
-        data.append(&mut spacing.clone());
-        data
-    });
-
-    base.insert("margin".into(), {
-        let mut data = extract_object(&obj, "margin");
-        data.append(&mut spacing.clone());
-        data
-    });
-
-    base.insert("z_index".into(), {
-        let mut data = extract_object(&obj, "z_index");
-        data.append(&mut spacing.clone());
-        data
-    });
-
-    base.insert("width".into(), {
-        let mut data = extract_object(&obj, "width");
-        data.append(&mut spacing.clone());
-        data
-    });
-
-    base.insert("height".into(), {
-        let mut data = extract_object(&obj, "height");
-        data.append(&mut spacing.clone());
-        data
-    });
-
-    base.insert("flex-direction".into(),  extract_object(&obj, "flex-direction"));
+    let (base, spacing) = extract_base(&obj);
 
     let config = Config {
         base,
         font_size,
         break_point,
         spacing,
+        utility: extract_utility(&obj),
         font_weight: extract_hash_map(&obj, "font_weight"),
         line_height: extract_hash_map(&obj, "lineHeight"),
         color: extract_object(&obj, "color"),
         aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
-        columns: extract_hash_map(&obj, "columns"),
-        box_decoration_break: extract_object(&obj, "box-decoration-break"),
-        box_sizing: extract_object(&obj, "box-sizing"),
-        display: extract_object(&obj, "display"),
-        visibility: extract_object(&obj, "visibility"),
         float: extract_object(&obj, "float"),
-        clear: extract_object(&obj, "clear"),
-        object_fit: extract_object(&obj, "object-fit"),
-        overflow: extract_object(&obj, "overflow"),
-        overscroll_behavior: extract_object(&obj, "overscroll-behavior"),
-        position: extract_object(&obj, "position"),
         plugins: vec![
             create_utility("margin", &obj, WithNegative).unwrap_or_default(),
             create_utility("padding", &obj, OnlyPositive).unwrap_or_default(),
@@ -122,11 +82,4 @@ fn extract_hash_map(value: &Map<String, Value>, key: &str) -> HashMap<String, St
         result.insert(key.to_string(), val.as_str().unwrap().to_string());
     }
     result
-}
-
-fn extract_object(obj: &Map<String, Value>, key: &str) -> Map<String, Value> {
-    if obj.get(key).is_none() || obj.get(key).unwrap().as_object().is_none() {
-        return Map::new();
-    }
-    obj.get(key).unwrap().as_object().unwrap().clone()
 }

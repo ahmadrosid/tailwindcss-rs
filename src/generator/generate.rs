@@ -56,23 +56,8 @@ pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
                     continue;
                 }
 
-                if handle_prefix(line, "columns").is_some() {
-                    generator.generate_columns(line);
-                    continue;
-                }
-
                 if handle_prefix(line, "break").is_some() {
                     generator.generate_break_point(line);
-                    continue;
-                }
-
-                if handle_prefix(line, "box-decoration").is_some() {
-                    generator.generate_box_decoration(line);
-                    continue;
-                }
-
-                if handle_prefix(line, "box").is_some() {
-                    generator.generate_box_sizing(line);
                     continue;
                 }
 

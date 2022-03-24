@@ -1,4 +1,4 @@
-use super::plugin::Utility;
+use super::{plugin::Utility, ConfigValue};
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
@@ -12,23 +12,14 @@ pub struct FontSize {
 pub struct Config {
     pub font_size: HashMap<String, FontSize>,
     pub font_weight: HashMap<String, String>,
-    pub base: HashMap<String, Map<String, Value>>,
+    pub base: ConfigValue,
+    pub utility: ConfigValue,
     pub spacing: Map<String, Value>,
     pub line_height: HashMap<String, String>,
     pub aspect_ratio: HashMap<String, String>,
-    pub columns: HashMap<String, String>,
-    pub box_decoration_break: Map<String, Value>,
-    pub box_sizing: Map<String, Value>,
     pub break_point: Map<String, Value>,
-    pub visibility: Map<String, Value>,
     pub float: Map<String, Value>,
     pub color: Map<String, Value>,
-    pub display: Map<String, Value>,
-    pub clear: Map<String, Value>,
-    pub object_fit: Map<String, Value>,
-    pub overflow: Map<String, Value>,
-    pub overscroll_behavior: Map<String, Value>,
-    pub position: Map<String, Value>,
     pub plugins: Vec<Utility>,
 }
 
@@ -97,16 +88,8 @@ impl Config {
         self.aspect_ratio.get(key)
     }
 
-    pub fn get_columns(&self, key: &str) -> Option<&String> {
-        self.columns.get(key)
-    }
-
     pub fn get_break_point(&self, key: &str) -> Option<&Value> {
         self.break_point.get(key)
-    }
-
-    pub fn get_box_decoration_break(&self, key: &str) -> Option<&Value> {
-        self.box_decoration_break.get(key)
     }
 
     pub fn get_color_map(&self, key: &str) -> Option<&Map<String, Value>> {

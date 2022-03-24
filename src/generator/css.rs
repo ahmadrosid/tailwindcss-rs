@@ -94,14 +94,14 @@ impl Css {
         }
     }
 
-    pub fn generate_columns(&mut self, line: &str) {
-        let key = line.split('-').last().unwrap();
-        let value = self.config.get_columns(key);
-        if let Some(val) = value {
-            let css = &format!(".columns-{} {{\n\tcolumns: {};\n}}", key, val);
-            self.append_css(css);
-        }
-    }
+    // pub fn generate_columns(&mut self, line: &str) {
+    //     let key = line.split('-').last().unwrap();
+    //     let value = self.config.get_columns(key);
+    //     if let Some(val) = value {
+    //         let css = &format!(".columns-{} {{\n\tcolumns: {};\n}}", key, val);
+    //         self.append_css(css);
+    //     }
+    // }
 
     pub fn generate_break_point(&mut self, line: &str) {
         let value = self.config.get_break_point(&format!(".{}", line));
@@ -112,47 +112,25 @@ impl Css {
         }
     }
 
-    pub fn generate_box_decoration(&mut self, line: &str) {
-        let key = &format!(".{}", line);
-        if let Some(value) = self.config.get_box_decoration_break(key) {
-            let (key, val) = value.as_object().unwrap().iter().next().unwrap();
-            let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
-            self.append_css(css);
-        }
-    }
+    // pub fn generate_box_decoration(&mut self, line: &str) {
+    //     let key = &format!(".{}", line);
+    //     if let Some(value) = self.config.get_box_decoration_break(key) {
+    //         let (key, val) = value.as_object().unwrap().iter().next().unwrap();
+    //         let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
+    //         self.append_css(css);
+    //     }
+    // }
 
-    pub fn generate_box_sizing(&mut self, line: &str) {
-        let key = &format!(".{}", line);
-        if let Some(value) = self.config.box_sizing.get(key) {
-            let (key, val) = value.as_object().unwrap().iter().next().unwrap();
-            let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
-            self.append_css(css);
-        }
-    }
+    // pub fn generate_box_sizing(&mut self, line: &str) {
+    //     let key = &format!(".{}", line);
+    //     if let Some(value) = self.config.box_sizing.get(key) {
+    //         let (key, val) = value.as_object().unwrap().iter().next().unwrap();
+    //         let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
+    //         self.append_css(css);
+    //     }
+    // }
 
-    pub fn generate_plugin(&mut self, line: &str) -> Option<()> {
-        let plugins = vec![
-            &self.config.display,
-            &self.config.visibility,
-            &self.config.float,
-            &self.config.clear,
-            &self.config.object_fit,
-            &self.config.overflow,
-            &self.config.overscroll_behavior,
-            &self.config.position,
-            // TODO: Clean up
-            &self.config.base.get("flex-direction").unwrap(),
-        ];
-
-        for plugin in plugins {
-            let key = format!(".{}", line);
-            if let Some((attribute, value)) = Config::get_obj(plugin, &key) {
-                let css = &format!("{} {{\n\t{}: {};\n}}", &key, attribute, value);
-                self.append_css(css);
-                return Some(());
-            }
-        }
-
+    pub fn get_key_name(&self, line: &str) -> (String, String, bool) {
         let key = line.split('-').collect::<Vec<_>>();
         let key_len = key.len();
         let is_negative = key_len >= 3 && key[0].is_empty();
@@ -175,10 +153,24 @@ impl Css {
             _ => line.to_string(),
         };
 
+        (key.last().unwrap().to_string(), name, is_negative)
+    }
+
+    pub fn generate_plugin(&mut self, line: &str) -> Option<()> {
+        let key = format!(".{}", line);
+        for (_, plugin) in self.config.utility.iter() {
+            if let Some((attribute, value)) = Config::get_obj(plugin, &key) {
+                let css = &format!("{} {{\n\t{}: {};\n}}", &key, attribute, value);
+                self.append_css(css);
+                return Some(());
+            }
+        }
+
+        let (key, name, is_negative) = self.get_key_name(line);
         for plugin in &self.config.plugins {
             if let Some(css_properties) =
                 self.config
-                    .get_plugin_value(plugin, &name, key.last()?, is_negative)
+                    .get_plugin_value(plugin, &name, &key, is_negative)
             {
                 let css = &format!(".{} {{\n{}}}", line.escape_class_name(), css_properties);
                 self.append_css(css);
