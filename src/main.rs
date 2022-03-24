@@ -60,11 +60,11 @@ struct Application {
     #[clap(short, long)]
     input: String,
 
-    /// Css output path
+    /// CSS output file path
     #[clap(short, long)]
     output: String,
 
-    /// Watch file changes
+    /// Enable watch file changes
     #[clap(short, long)]
     watch: bool,
 }
