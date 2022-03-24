@@ -94,15 +94,6 @@ impl Css {
         }
     }
 
-    // pub fn generate_columns(&mut self, line: &str) {
-    //     let key = line.split('-').last().unwrap();
-    //     let value = self.config.get_columns(key);
-    //     if let Some(val) = value {
-    //         let css = &format!(".columns-{} {{\n\tcolumns: {};\n}}", key, val);
-    //         self.append_css(css);
-    //     }
-    // }
-
     pub fn generate_break_point(&mut self, line: &str) {
         let value = self.config.get_break_point(&format!(".{}", line));
         if let Some(val) = value {
@@ -111,24 +102,6 @@ impl Css {
             self.append_css(css);
         }
     }
-
-    // pub fn generate_box_decoration(&mut self, line: &str) {
-    //     let key = &format!(".{}", line);
-    //     if let Some(value) = self.config.get_box_decoration_break(key) {
-    //         let (key, val) = value.as_object().unwrap().iter().next().unwrap();
-    //         let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
-    //         self.append_css(css);
-    //     }
-    // }
-
-    // pub fn generate_box_sizing(&mut self, line: &str) {
-    //     let key = &format!(".{}", line);
-    //     if let Some(value) = self.config.box_sizing.get(key) {
-    //         let (key, val) = value.as_object().unwrap().iter().next().unwrap();
-    //         let css = &format!(".{} {{\n\t{}: {};\n}}", line, key, val.as_str().unwrap());
-    //         self.append_css(css);
-    //     }
-    // }
 
     pub fn get_key_name(line: &str) -> (String, String, bool) {
         let key = line.split('-').collect::<Vec<_>>();
