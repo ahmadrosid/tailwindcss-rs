@@ -53,9 +53,9 @@ impl Config {
             _ => data_key,
         };
 
-        let variant: Option<&str> = match self.spacing.get(key_val) {
-            Some(val) => val.as_str(),
-            None => self.base.get(name)?.get(key_val)?.as_str(),
+        let variant: Option<&str> = match self.utility.get(name) {
+            Some(val) => val.get(key_val)?.as_str(),
+            None => self.spacing.get(key_val)?.as_str(),
         };
 
         let value = if is_negative {

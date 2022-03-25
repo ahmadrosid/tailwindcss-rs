@@ -47,14 +47,28 @@ fn test_aspect_ratio() {
 fn test_columns() {
     let config_set = config::parse(include_str!("default-config.json")).unwrap();
     let test_case = vec![
-        ("columns-1", ".columns-1 {\n\tcolumns: 0.25rem;\n}"),
-        ("columns-2", ".columns-2 {\n\tcolumns: 0.5rem;\n}"),
-        ("columns-3", ".columns-3 {\n\tcolumns: 0.75rem;\n}"),
-        ("columns-4", ".columns-4 {\n\tcolumns: 1rem;\n}"),
-        ("columns-5", ".columns-5 {\n\tcolumns: 1.25rem;\n}"),
-        ("columns-6", ".columns-6 {\n\tcolumns: 1.5rem;\n}"),
-        ("columns-7", ".columns-7 {\n\tcolumns: 1.75rem;\n}"),
-        ("columns-8", ".columns-8 {\n\tcolumns: 2rem;\n}"),
+        ("columns-1", ".columns-1 {\n\tcolumns: 1;\n}"),
+        ("columns-2", ".columns-2 {\n\tcolumns: 2;\n}"),
+        ("columns-3", ".columns-3 {\n\tcolumns: 3;\n}"),
+        ("columns-4", ".columns-4 {\n\tcolumns: 4;\n}"),
+        ("columns-5", ".columns-5 {\n\tcolumns: 5;\n}"),
+        ("columns-6", ".columns-6 {\n\tcolumns: 6;\n}"),
+        ("columns-7", ".columns-7 {\n\tcolumns: 7;\n}"),
+        ("columns-8", ".columns-8 {\n\tcolumns: 8;\n}"),
+        ("columns-9", ".columns-9 {\n\tcolumns: 9;\n}"),
+        ("columns-10", ".columns-10 {\n\tcolumns: 10;\n}"),
+        ("columns-11", ".columns-11 {\n\tcolumns: 11;\n}"),
+        ("columns-12", ".columns-12 {\n\tcolumns: 12;\n}"),
+        ("columns-auto", ".columns-auto {\n\tcolumns: auto;\n}"),
+        ("columns-2xs", ".columns-2xs {\n\tcolumns: 18rem;\n}"),
+        ("columns-3xs", ".columns-3xs {\n\tcolumns: 16rem;\n}"),
+        ("columns-xs", ".columns-xs {\n\tcolumns: 20rem;\n}"),
+        ("columns-sm", ".columns-sm {\n\tcolumns: 24rem;\n}"),
+        ("columns-md", ".columns-md {\n\tcolumns: 28rem;\n}"),
+        ("columns-lg", ".columns-lg {\n\tcolumns: 32rem;\n}"),
+        ("columns-xl", ".columns-xl {\n\tcolumns: 36rem;\n}"),
+        ("columns-2xl", ".columns-2xl {\n\tcolumns: 42rem;\n}"),
+        ("columns-3xl", ".columns-xl {\n\tcolumns: 36rem;\n}"),
     ];
 
     struct Buf(String);
