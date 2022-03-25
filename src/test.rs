@@ -21,6 +21,14 @@ fn test_font_size() {
         ("text-base", ".text-base {\n\tfont-size: 1rem;\n\tline-height: 1.5rem;\n}"),
         ("text-lg", ".text-lg {\n\tfont-size: 1.125rem;\n\tline-height: 1.75rem;\n}"),
         ("text-xl", ".text-xl {\n\tfont-size: 1.25rem;\n\tline-height: 1.75rem;\n}"),
+        ("text-2xl", ".text-2xl {\n\tfont-size: 1.5rem;\n\tline-height: 2rem;\n}"),
+        ("text-3xl", ".text-3xl {\n\tfont-size: 1.875rem;\n\tline-height: 2.25rem;\n}"),
+        ("text-4xl", ".text-4xl {\n\tfont-size: 2.25rem;\n\tline-height: 2.5rem;\n}"),
+        ("text-5xl", ".text-5xl {\n\tfont-size: 3rem;\n\tline-height: 1;\n}"),
+        ("text-6xl", ".text-6xl {\n\tfont-size: 3.75rem;\n\tline-height: 1;\n}"),
+        ("text-7xl", ".text-7xl {\n\tfont-size: 4.5rem;\n\tline-height: 1;\n}"),
+        ("text-8xl", ".text-8xl {\n\tfont-size: 6rem;\n\tline-height: 1;\n}"),
+        ("text-9xl", ".text-9xl {\n\tfont-size: 8rem;\n\tline-height: 1;\n}"),
     ];
     for (class, expected) in test_case {
         impl Buffer for &str {
