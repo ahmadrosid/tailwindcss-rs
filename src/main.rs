@@ -4,6 +4,9 @@ mod config;
 mod generator;
 mod html;
 
+#[cfg(test)]
+mod test;
+
 use clap::Parser;
 use log::{info, warn};
 use notify::{DebouncedEvent, RecommendedWatcher, RecursiveMode, Watcher};
