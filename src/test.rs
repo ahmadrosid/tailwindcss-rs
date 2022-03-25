@@ -114,6 +114,32 @@ fn test_break_after() {
 }
 
 #[test]
+fn test_break_before() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("break-before-auto", ".break-before-auto {\n\tbreak-before: auto;\n}"),
+        ("break-before-avoid", ".break-before-avoid {\n\tbreak-before: avoid;\n}"),
+        ("break-before-all", ".break-before-all {\n\tbreak-before: all;\n}"),
+        ("break-before-avoid-page", ".break-before-avoid-page {\n\tbreak-before: avoid-page;\n}"),
+        ("break-before-page", ".break-before-page {\n\tbreak-before: page;\n}"),
+        ("break-before-column", ".break-before-column {\n\tbreak-before: column;\n}"),
+        ("break-before-left", ".break-before-left {\n\tbreak-before: left;\n}"),
+        ("break-before-right", ".break-before-right {\n\tbreak-before: right;\n}"),
+    ];
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
 fn test_font_size() {
     let config_set = config::parse(include_str!("default-config.json")).unwrap();
     let test_case = vec![
