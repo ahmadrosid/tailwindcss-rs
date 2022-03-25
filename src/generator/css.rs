@@ -1,5 +1,5 @@
-use super::Buffer;
 use super::utils::EscapeClassName;
+use super::Buffer;
 use crate::config::Config;
 
 pub struct Css {

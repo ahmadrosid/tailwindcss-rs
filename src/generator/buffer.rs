@@ -1,5 +1,5 @@
-use std::io::{BufWriter, Write};
 use std::fs::File;
+use std::io::{BufWriter, Write};
 
 pub trait Buffer {
     fn write(&mut self, data: &str);

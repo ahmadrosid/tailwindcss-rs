@@ -4,9 +4,9 @@ use serde_json::{Map, Value};
 use std::collections::HashMap;
 
 use super::extract_object;
+use super::plugin;
 use super::plugin::create_utility;
 use super::plugin::Mode::{OnlyPositive, WithNegative};
-use super::plugin;
 use super::utility;
 
 pub fn parse(source: &str) -> serde_json::Result<Config> {
@@ -38,6 +38,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
             create_utility("inset", &obj, WithNegative).unwrap_or_default(),
             create_utility("z_index", &obj, WithNegative).unwrap_or_default(),
             create_utility("basis", &obj, OnlyPositive).unwrap_or_default(),
+            create_utility("columns", &obj, OnlyPositive).unwrap_or_default(),
         ],
     };
 

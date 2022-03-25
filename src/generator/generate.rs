@@ -1,10 +1,10 @@
+use super::BufferWriter;
 use crate::config::Config;
 use crate::generator::{Buffer, Css};
-use super::BufferWriter;
 
+use log::warn;
 use std::collections::HashSet;
 use std::path::Path;
-use log::warn;
 
 fn handle_prefix(line: &str, prefix: &str) -> Option<String> {
     if line.starts_with(&format!("{}-", prefix)) {

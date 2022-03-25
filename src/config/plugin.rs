@@ -1,8 +1,8 @@
-use super::Object;
 use super::extract_object;
-use std::collections::HashMap;
+use super::Object;
 use serde_json::Map;
 use serde_json::Value;
+use std::collections::HashMap;
 
 // name: key -> [properties]
 // value: inset -> [[String("top"), String("right"), String("bottom"), String("left")]]

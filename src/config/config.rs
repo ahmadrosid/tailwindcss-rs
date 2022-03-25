@@ -50,12 +50,12 @@ impl Config {
             "h" => "height",
             "z" => "z_index",
             "m" | "mx" | "my" | "ml" | "mr" | "mt" | "mb" => "margin",
-            _ => data_key
+            _ => data_key,
         };
 
         let variant: Option<&str> = match self.spacing.get(key_val) {
             Some(val) => val.as_str(),
-            None => self.base.get(name)?.get(key_val)?.as_str()
+            None => self.base.get(name)?.get(key_val)?.as_str(),
         };
 
         let value = if is_negative {

@@ -34,6 +34,7 @@
     "height": [["h",["height"]]],
     "z_index": [["z",["z-index"]]],
     "inset": [["inset",["top","right","bottom","left"]],[["inset-x",["left","right"]],["inset-y",["top","bottom"]]],[["top",["top"]],["right",["right"]],["bottom",["bottom"]],["left",["left"]]]],
-    "basis": [["basis", ["flex-basis"]]]
+    "basis": [["basis", ["flex-basis"]]],
+    "columns": [["columns",["columns"]]]
   }
 }

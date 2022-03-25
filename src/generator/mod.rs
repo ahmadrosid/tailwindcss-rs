@@ -1,10 +1,10 @@
+mod buffer;
 mod css;
 mod generate;
 mod utils;
-mod buffer;
 
+pub use buffer::Buffer;
+pub use buffer::BufferWriter;
 pub use css::Css;
 pub use generate::execute;
 pub use generate::write_css;
-pub use buffer::Buffer;
-pub use buffer::BufferWriter;
