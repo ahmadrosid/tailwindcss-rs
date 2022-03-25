@@ -69,6 +69,10 @@ fn test_columns() {
         ("columns-xl", ".columns-xl {\n\tcolumns: 36rem;\n}"),
         ("columns-2xl", ".columns-2xl {\n\tcolumns: 42rem;\n}"),
         ("columns-3xl", ".columns-3xl {\n\tcolumns: 48rem;\n}"),
+        ("columns-4xl", ".columns-4xl {\n\tcolumns: 56rem;\n}"),
+        ("columns-5xl", ".columns-5xl {\n\tcolumns: 64rem;\n}"),
+        ("columns-6xl", ".columns-6xl {\n\tcolumns: 72rem;\n}"),
+        ("columns-7xl", ".columns-7xl {\n\tcolumns: 80rem;\n}"),
     ];
 
     struct Buf(String);
