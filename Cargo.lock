@@ -740,7 +740,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tailwind-rs"
+name = "tailwindcss-rs"
 version = "0.1.0"
 dependencies = [
  "clap",
