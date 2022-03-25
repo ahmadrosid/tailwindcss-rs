@@ -28,10 +28,10 @@ pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
 
     match css_file {
         Ok(mut file) => {
-            let buffer = BufferWriter::new(Box::new(file.try_clone().unwrap()));
+            let buffer = BufferWriter::new(file.try_clone().unwrap());
             let mut generator = Css::new(Box::new(buffer), config_json.clone());
             if file.read_to_string(&mut data).is_err() {
-                println!("Unable to read file: {}", output);
+                warn!("Unable to read file: {}", output);
                 std::process::exit(1);
             }
 

@@ -6,11 +6,11 @@ pub trait Buffer {
 }
 
 pub struct BufferWriter {
-    writer: BufWriter<Box<File>>,
+    writer: BufWriter<File>,
 }
 
 impl BufferWriter {
-    pub fn new(file: Box<File>) -> Self {
+    pub fn new(file: File) -> Self {
         let writer = BufWriter::new(file);
         Self { writer }
     }
