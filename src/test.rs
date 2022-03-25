@@ -88,6 +88,32 @@ fn test_columns() {
 }
 
 #[test]
+fn test_break_after() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("break-after-auto", ".break-after-auto {\n\tbreak-after: auto;\n}"),
+        ("break-after-avoid", ".break-after-avoid {\n\tbreak-after: avoid;\n}"),
+        ("break-after-all", ".break-after-all {\n\tbreak-after: all;\n}"),
+        ("break-after-avoid-page", ".break-after-avoid-page {\n\tbreak-after: avoid-page;\n}"),
+        ("break-after-page", ".break-after-page {\n\tbreak-after: page;\n}"),
+        ("break-after-column", ".break-after-column {\n\tbreak-after: column;\n}"),
+        ("break-after-left", ".break-after-left {\n\tbreak-after: left;\n}"),
+        ("break-after-right", ".break-after-right {\n\tbreak-after: right;\n}"),
+    ];
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
 fn test_font_size() {
     let config_set = config::parse(include_str!("default-config.json")).unwrap();
     let test_case = vec![
