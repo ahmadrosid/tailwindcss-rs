@@ -17,8 +17,8 @@ fn handle_prefix(line: &str, prefix: &str) -> Option<String> {
     }
 }
 
-pub fn write_css(buffer: Box<dyn Buffer>, config: Config, source: &HashSet<String>) {
-    let mut generator = Css::new(buffer, config);
+pub fn write_css(buffer: Box<dyn Buffer>, config: &Config, source: &HashSet<String>) {
+    let mut generator = Css::new(buffer, config.clone());
     for line in source.iter() {
         if line.starts_with("text-") {
             generator.generate_font_size(line);
@@ -71,7 +71,7 @@ pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
             }
 
             let buffer = BufferWriter::new(file.try_clone().unwrap());
-            write_css(Box::new(buffer), config_json.clone(), source)
+            write_css(Box::new(buffer), config_json, source)
         },
         _ => warn!("Unable to create file: {}", output)
     };
