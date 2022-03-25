@@ -52,6 +52,9 @@ fn test_columns() {
         ("columns-3", ".columns-3 {\n\tcolumns: 0.75rem;\n}"),
         ("columns-4", ".columns-4 {\n\tcolumns: 1rem;\n}"),
         ("columns-5", ".columns-5 {\n\tcolumns: 1.25rem;\n}"),
+        ("columns-6", ".columns-6 {\n\tcolumns: 1.5rem;\n}"),
+        ("columns-7", ".columns-7 {\n\tcolumns: 1.75rem;\n}"),
+        ("columns-8", ".columns-8 {\n\tcolumns: 2rem;\n}"),
     ];
 
     struct Buf(String);
