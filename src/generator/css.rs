@@ -1,24 +1,19 @@
+use super::Buffer;
 use super::utils::EscapeClassName;
 use crate::config::Config;
-use std::fs::File;
-use std::io::{BufWriter, Write};
 
 pub struct Css {
     config: Config,
-    writer: BufWriter<Box<File>>,
+    writer: Box<dyn Buffer>,
 }
 
 impl Css {
-    pub fn new(file: &File, config: Config) -> Self {
-        let file = file.try_clone().unwrap();
-        let writer = BufWriter::new(Box::new(file));
+    pub fn new(writer: Box<dyn Buffer>, config: Config) -> Self {
         Self { config, writer }
     }
 
     fn append_css(&mut self, css: &str) {
-        if let Err(e) = self.writer.write_all(format!("{}\n", css).as_bytes()) {
-            println!("Failed to write css to file: {}", e);
-        }
+        self.writer.write(css)
     }
 
     pub fn generate_font_size(&mut self, line: &str) {

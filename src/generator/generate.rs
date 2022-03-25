@@ -7,6 +7,8 @@ use std::collections::HashSet;
 use std::io::Read;
 use std::path::Path;
 
+use super::BufferWriter;
+
 fn handle_prefix(line: &str, prefix: &str) -> Option<String> {
     if line.starts_with(&format!("{}-", prefix)) {
         Some(prefix.to_string())
@@ -26,7 +28,8 @@ pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
 
     match css_file {
         Ok(mut file) => {
-            let mut generator = Css::new(&file, config_json.clone());
+            let buffer = BufferWriter::new(Box::new(file.try_clone().unwrap()));
+            let mut generator = Css::new(Box::new(buffer), config_json.clone());
             if file.read_to_string(&mut data).is_err() {
                 println!("Unable to read file: {}", output);
                 std::process::exit(1);
