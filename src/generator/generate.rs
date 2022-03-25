@@ -1,13 +1,10 @@
-use log::warn;
-
 use crate::config::Config;
 use crate::generator::{Buffer, Css};
+use super::BufferWriter;
 
 use std::collections::HashSet;
-use std::io::Read;
 use std::path::Path;
-
-use super::BufferWriter;
+use log::warn;
 
 fn handle_prefix(line: &str, prefix: &str) -> Option<String> {
     if line.starts_with(&format!("{}-", prefix)) {
@@ -61,18 +58,11 @@ pub fn execute(source: &HashSet<String>, output: &str, config_json: &Config) {
         .read(true)
         .truncate(true)
         .open(Path::new(&output));
-    let mut data = String::new();
 
-    match css_file {
-        Ok(mut file) => {
-            if file.read_to_string(&mut data).is_err() {
-                warn!("Unable to read file: {}", output);
-                std::process::exit(1);
-            }
-
-            let buffer = BufferWriter::new(file.try_clone().unwrap());
-            write_css(Box::new(buffer), config_json, source)
-        },
-        _ => warn!("Unable to create file: {}", output)
-    };
+    if let Ok(file) = css_file {
+        let buffer = BufferWriter::new(file.try_clone().unwrap());
+        write_css(Box::new(buffer), config_json, source);
+    } else {
+        warn!("Unable to create file: {}", output);
+    }
 }
