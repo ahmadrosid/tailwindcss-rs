@@ -140,6 +140,32 @@ fn test_break_before() {
 }
 
 #[test]
+fn test_break_inside() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("break-inside-auto", ".break-inside-auto {\n\tbreak-inside: auto;\n}"),
+        ("break-inside-avoid", ".break-inside-avoid {\n\tbreak-inside: avoid;\n}"),
+        ("break-inside-all", ".break-inside-all {\n\tbreak-inside: all;\n}"),
+        ("break-inside-avoid-page", ".break-inside-avoid-page {\n\tbreak-inside: avoid-page;\n}"),
+        ("break-inside-page", ".break-inside-page {\n\tbreak-inside: page;\n}"),
+        ("break-inside-column", ".break-inside-column {\n\tbreak-inside: column;\n}"),
+        ("break-inside-left", ".break-inside-left {\n\tbreak-inside: left;\n}"),
+        ("break-inside-right", ".break-inside-right {\n\tbreak-inside: right;\n}"),
+    ];
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
 fn test_font_size() {
     let config_set = config::parse(include_str!("default-config.json")).unwrap();
     let test_case = vec![
