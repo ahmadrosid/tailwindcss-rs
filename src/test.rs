@@ -2,6 +2,7 @@ use std::collections::HashSet;
 
 use crate::{generator::{write_css, Buffer}, config};
 
+#[macro_export]
 macro_rules! set {
     ($($element:expr),*) => {
         {
@@ -30,12 +31,36 @@ fn test_font_size() {
         ("text-8xl", ".text-8xl {\n\tfont-size: 6rem;\n\tline-height: 1;\n}"),
         ("text-9xl", ".text-9xl {\n\tfont-size: 8rem;\n\tline-height: 1;\n}"),
     ];
-    for (class, expected) in test_case {
-        impl Buffer for &str {
-            fn write(&mut self, data: &str) {
-                assert_eq!(data, *self)
-            }
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
         }
-        write_css(Box::new(expected), &config_set, &set![class]);
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
+fn test_aspect_ratio() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("aspect-auto", ".aspect-auto {\n\taspect-ratio: auto;\n}"),
+        ("aspect-square", ".aspect-square {\n\taspect-ratio: 1 / 1;\n}"),
+        ("aspect-video", ".aspect-video {\n\taspect-ratio: 16 / 9;\n}"),
+    ];
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
     }
 }
