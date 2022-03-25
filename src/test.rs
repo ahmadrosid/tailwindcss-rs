@@ -50,7 +50,7 @@ fn test_columns() {
         ("columns-1", ".columns-1 {\n\tcolumns: 0.25rem;\n}"),
         ("columns-2", ".columns-2 {\n\tcolumns: 0.5rem;\n}"),
         ("columns-3", ".columns-3 {\n\tcolumns: 0.75rem;\n}"),
-        ("columns-3", ".columns-3 {\n\tcolumns: 0.75rem;\n}"),
+        ("columns-4", ".columns-3 {\n\tcolumns: 0.75rem;\n}"),
     ];
 
     struct Buf(String);
