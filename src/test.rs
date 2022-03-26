@@ -166,6 +166,65 @@ fn test_break_inside() {
 }
 
 #[test]
+fn test_flex_basis() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("basis-0", ".basis-0 {\n\tflex-basis: 0px;\n}"),
+        ("basis-1", ".basis-1 {\n\tflex-basis: 0.25rem;\n}"),
+        ("basis-2", ".basis-2 {\n\tflex-basis: 0.5rem;\n}"),
+        ("basis-3", ".basis-3 {\n\tflex-basis: 0.75rem;\n}"),
+        ("basis-4", ".basis-4 {\n\tflex-basis: 1rem;\n}"),
+        ("basis-5", ".basis-5 {\n\tflex-basis: 1.25rem;\n}"),
+        ("basis-6", ".basis-6 {\n\tflex-basis: 1.5rem;\n}"),
+        ("basis-7", ".basis-7 {\n\tflex-basis: 1.75rem;\n}"),
+        ("basis-8", ".basis-8 {\n\tflex-basis: 2rem;\n}"),
+        ("basis-9", ".basis-9 {\n\tflex-basis: 2.25rem;\n}"),
+        ("basis-10", ".basis-10 {\n\tflex-basis: 2.5rem;\n}"),
+        ("basis-11", ".basis-11 {\n\tflex-basis: 2.75rem;\n}"),
+        ("basis-12", ".basis-12 {\n\tflex-basis: 3rem;\n}"),
+        ("basis-14", ".basis-14 {\n\tflex-basis: 3.5rem;\n}"),
+        ("basis-16", ".basis-16 {\n\tflex-basis: 4rem;\n}"),
+        ("basis-20", ".basis-20 {\n\tflex-basis: 5rem;\n}"),
+        ("basis-24", ".basis-24 {\n\tflex-basis: 6rem;\n}"),
+        ("basis-28", ".basis-28 {\n\tflex-basis: 7rem;\n}"),
+        ("basis-32", ".basis-32 {\n\tflex-basis: 8rem;\n}"),
+        ("basis-36", ".basis-36 {\n\tflex-basis: 9rem;\n}"),
+        ("basis-40", ".basis-40 {\n\tflex-basis: 10rem;\n}"),
+        ("basis-44", ".basis-44 {\n\tflex-basis: 11rem;\n}"),
+        ("basis-48", ".basis-48 {\n\tflex-basis: 12rem;\n}"),
+        ("basis-52", ".basis-52 {\n\tflex-basis: 13rem;\n}"),
+        ("basis-56", ".basis-56 {\n\tflex-basis: 14rem;\n}"),
+        ("basis-60", ".basis-60 {\n\tflex-basis: 15rem;\n}"),
+        ("basis-64", ".basis-64 {\n\tflex-basis: 16rem;\n}"),
+        ("basis-72", ".basis-72 {\n\tflex-basis: 18rem;\n}"),
+        ("basis-80", ".basis-80 {\n\tflex-basis: 20rem;\n}"),
+        ("basis-96", ".basis-96 {\n\tflex-basis: 24rem;\n}"),
+        ("basis-auto", ".basis-auto {\n\tflex-basis: auto;\n}"),
+        // Not all spacing variant need to be tested, this sample is enough to verify.
+        ("basis-px", ".basis-px {\n\tflex-basis: 1px;\n}"),
+        ("basis-0.5", ".basis-0\\.5 {\n\tflex-basis: 0.125rem;\n}"),
+        ("basis-1.5", ".basis-1\\.5 {\n\tflex-basis: 0.375rem;\n}"),
+        ("basis-2.5", ".basis-2\\.5 {\n\tflex-basis: 0.625rem;\n}"),
+        ("basis-3.5", ".basis-3\\.5 {\n\tflex-basis: 0.875rem;\n}"),
+        ("basis-1/2", ".basis-1\\/2 {\n\tflex-basis: 50%;\n}"),
+        ("basis-1/3", ".basis-1\\/3 {\n\tflex-basis: 33.333333%;\n}"),
+        ("basis-2/3", ".basis-2\\/3 {\n\tflex-basis: 66.666667%;\n}"),
+        ("basis-full", ".basis-full {\n\tflex-basis: 100%;\n}"),
+    ];
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
 fn test_font_size() {
     let config_set = config::parse(include_str!("default-config.json")).unwrap();
     let test_case = vec![

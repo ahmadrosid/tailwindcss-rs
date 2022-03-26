@@ -19,3 +19,9 @@ pub fn extract_object(obj: &Map<String, Value>, key: &str) -> Map<String, Value>
     }
     obj.get(key).unwrap().as_object().unwrap().clone()
 }
+
+pub fn extract_object_ext(obj: &Map<String, Value>, key: &str, ext: &str) -> Map<String, Value> {
+    let mut data = extract_object(obj, key);
+    data.extend(extract_object(obj, ext));
+    data
+}

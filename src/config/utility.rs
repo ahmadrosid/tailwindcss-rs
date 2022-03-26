@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use serde_json::{Map, Value};
+use crate::config::extract_object_ext;
 
 use super::{extract_object, Object};
 
@@ -26,5 +27,6 @@ pub fn extract(obj: &'_ Map<String, Value>) -> Object {
         extract_object(obj, "box-decoration-break"),
     );
     utility.insert("columns".into(), extract_object(obj, "columns"));
+    utility.insert("basis".into(), extract_object_ext(obj, "basis", "spacing"));
     utility
 }

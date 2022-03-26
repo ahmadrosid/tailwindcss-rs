@@ -129,7 +129,7 @@ impl Css {
         let key = format!(".{}", line);
         for plugin in self.config.utility.values() {
             if let Some((attribute, value)) = Config::get_obj(plugin, &key) {
-                let css = &format!("{} {{\n\t{}: {};\n}}", &key, attribute, value);
+                let css = &format!(".{} {{\n\t{}: {};\n}}", line.escape_class_name(), attribute, value);
                 self.append_css(css);
                 return Some(());
             }
