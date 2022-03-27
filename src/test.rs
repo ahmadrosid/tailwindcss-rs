@@ -225,6 +225,49 @@ fn test_flex_basis() {
 }
 
 #[test]
+fn test_flex_direction() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("flex-row", ".flex-row {\n\tflex-direction: row;\n}"),
+        ("flex-row-reverse", ".flex-row-reverse {\n\tflex-direction: row-reverse;\n}"),
+        ("flex-col", ".flex-col {\n\tflex-direction: column;\n}"),
+        ("flex-col-reverse", ".flex-col-reverse {\n\tflex-direction: column-reverse;\n}"),
+    ];
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
+fn test_flex_wrap() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("flex-wrap", ".flex-wrap {\n\tflex-wrap: wrap;\n}"),
+        ("flex-wrap-reverse", ".flex-wrap-reverse {\n\tflex-wrap: wrap-reverse;\n}"),
+        ("flex-nowrap", ".flex-nowrap {\n\tflex-wrap: nowrap;\n}"),
+    ];
+
+    struct Buf(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0)
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
 fn test_font_size() {
     let config_set = config::parse(include_str!("default-config.json")).unwrap();
     let test_case = vec![

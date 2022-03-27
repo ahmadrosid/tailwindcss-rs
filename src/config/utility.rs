@@ -11,6 +11,10 @@ pub fn extract(obj: &'_ Map<String, Value>) -> Object {
         "flex-direction".into(),
         extract_object(obj, "flex-direction"),
     );
+    utility.insert(
+        "flex-wrap".into(),
+        extract_object(obj, "flex-wrap"),
+    );
     utility.insert("display".into(), extract_object(obj, "display"));
     utility.insert("visibility".into(), extract_object(obj, "visibility"));
     utility.insert("position".into(), extract_object(obj, "position"));
