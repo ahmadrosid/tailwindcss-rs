@@ -3,7 +3,7 @@ use crate::config::FontSize;
 use serde_json::{Map, Value};
 use std::collections::HashMap;
 
-use super::extract_object;
+use super::get_object;
 use super::plugin;
 use super::plugin::create_utility;
 use super::plugin::Mode::{OnlyPositive, WithNegative};
@@ -13,9 +13,9 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
     let value: Value = serde_json::from_str(source)?;
     let obj: Map<String, Value> = value.as_object().unwrap().clone();
     let font_size = extract_font_size(&obj);
-    let mut break_point = extract_object(&obj, "break-before");
-    break_point.extend(extract_object(&obj, "break-after"));
-    break_point.extend(extract_object(&obj, "break-inside"));
+    let mut break_point = get_object(&obj, "break-before");
+    break_point.extend(get_object(&obj, "break-after"));
+    break_point.extend(get_object(&obj, "break-inside"));
 
     let (base, spacing) = plugin::extract_base(&obj);
 
@@ -27,9 +27,9 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
         utility: utility::extract(&obj),
         font_weight: extract_hash_map(&obj, "font_weight"),
         line_height: extract_hash_map(&obj, "lineHeight"),
-        color: extract_object(&obj, "color"),
+        color: get_object(&obj, "color"),
         aspect_ratio: extract_hash_map(&obj, "aspectRatio"),
-        float: extract_object(&obj, "float"),
+        float: get_object(&obj, "float"),
         plugins: vec![
             create_utility("margin", &obj, WithNegative).unwrap_or_default(),
             create_utility("padding", &obj, OnlyPositive).unwrap_or_default(),
@@ -39,6 +39,7 @@ pub fn parse(source: &str) -> serde_json::Result<Config> {
             create_utility("z_index", &obj, WithNegative).unwrap_or_default(),
             create_utility("basis", &obj, OnlyPositive).unwrap_or_default(),
             create_utility("columns", &obj, OnlyPositive).unwrap_or_default(),
+            create_utility("flex", &obj, OnlyPositive).unwrap_or_default(),
         ],
     };
 

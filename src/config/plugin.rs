@@ -1,4 +1,4 @@
-use super::extract_object;
+use super::get_object;
 use super::Object;
 use serde_json::Map;
 use serde_json::Value;
@@ -54,35 +54,35 @@ pub fn create_utility<'a>(
 }
 
 pub fn extract_base(obj: &'_ Map<String, Value>) -> (Object, Map<String, Value>) {
-    let spacing = extract_object(obj, "spacing");
+    let spacing = get_object(obj, "spacing");
     let mut base: Object = HashMap::new();
 
     base.insert("basis".into(), {
-        let mut data = extract_object(obj, "data");
+        let mut data = get_object(obj, "data");
         data.append(&mut spacing.clone());
         data
     });
 
     base.insert("margin".into(), {
-        let mut data = extract_object(obj, "margin");
+        let mut data = get_object(obj, "margin");
         data.append(&mut spacing.clone());
         data
     });
 
     base.insert("z_index".into(), {
-        let mut data = extract_object(obj, "z_index");
+        let mut data = get_object(obj, "z_index");
         data.append(&mut spacing.clone());
         data
     });
 
     base.insert("width".into(), {
-        let mut data = extract_object(obj, "width");
+        let mut data = get_object(obj, "width");
         data.append(&mut spacing.clone());
         data
     });
 
     base.insert("height".into(), {
-        let mut data = extract_object(obj, "height");
+        let mut data = get_object(obj, "height");
         data.append(&mut spacing.clone());
         data
     });
