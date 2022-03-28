@@ -371,6 +371,26 @@ fn test_flex() {
 }
 
 #[test]
+fn test_flex_grow() {
+    let config_set = config::parse(include_str!("default-config.json")).unwrap();
+    let test_case = vec![
+        ("grow", ".flex-1 {\n\tflex: 1 1 0%;\n}"),
+        ("grow-0", ".flex-auto {\n\tflex: 1 1 auto;\n}"),
+    ];
+
+    struct Buf<>(String);
+    impl Buffer for Buf {
+        fn write(&mut self, data: &str) {
+            assert_eq!(data, self.0);
+        }
+    }
+
+    for (class, expected) in test_case {
+        write_css(Box::new(Buf(expected.into())), &config_set, &set![class]);
+    }
+}
+
+#[test]
 fn test_font_size() {
     let config_set = config::parse(include_str!("default-config.json")).unwrap();
     let test_case = vec![
